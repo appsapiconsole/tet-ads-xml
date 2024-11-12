@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.monetization.nativeads.ui.AdmobNativeView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:background="@drawable/ad_rect_bg"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="6dp"
+        android:layout_marginVertical="6dp">
+
+        <RelativeLayout
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/adData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="2dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/ad_media"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <com.monetization.nativeads.ui.AdmobNativeMediaView
+                        android:id="@+id/ad_media"
+                        android:layout_width="match_parent"
+                        android:layout_height="125dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="13dp"
+                        android:adjustViewBounds="true"
+                        app:layout_constraintBottom_toTopOf="@+id/ad_call_to_action"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/top_barrier"
+                        app:layout_constraintVertical_bias="1.0" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/ad_app_icon"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="4dp"
+                            android:adjustViewBounds="true"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tv_ad"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/ad_attr_bg"
+                                    android:gravity="center"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="2dp"
+                                    android:text="Ad"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="9sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toEndOf="@+id/ad_app_icon"
+                                    app:layout_constraintTop_toTopOf="@+id/ad_app_icon" />
+
+                                <TextView
+                                    android:id="@+id/ad_headline"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="5dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:maxLines="2"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="10sp"
+                                    android:textStyle="bold"
+                                    app:layout_constrainedWidth="true"
+                                    app:layout_constraintBottom_toBottomOf="@id/tv_ad"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintStart_toEndOf="@+id/tv_ad"
+                                    app:layout_constraintTop_toTopOf="@id/tv_ad" />
+
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/ad_body"
+                                android:maxLines="2"
+                                android:layout_marginTop="8dp"
+                                android:textColor="#FFFFFF"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/ad_call_to_action"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginTop="14dp"
+                        android:gravity="center"
+                        android:layout_marginHorizontal="6dp"
+                        android:layout_marginBottom="9dp"
+                        android:background="@drawable/ad_btn_bg"
+                        android:minHeight="40dp"
+                        android:text="Install"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="@null"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/ad_app_icon"
+                        app:layout_constraintTop_toBottomOf="@+id/ad_media" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </com.monetization.nativeads.ui.AdmobNativeView>
+</RelativeLayout>

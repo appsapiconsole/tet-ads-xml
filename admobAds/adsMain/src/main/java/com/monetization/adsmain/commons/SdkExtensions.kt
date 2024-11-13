@@ -28,30 +28,26 @@ fun AdsUiWidget.sdkNativeAdd(
     adsWidgetData: AdsWidgetData? = null,
     listener: UiAdsListener? = null
 ) {
-    if (activity == null) {
-        "Pass Activity When Calling sdkNativeAd".errorLogging()
-    } else {
-        apply {
-            attachWithLifecycle(lifecycle = lifecycle, forBanner = false, isJetpackCompose = false)
-            setWidgetKey(
-                placementKey = placementKey,
-                adKey = adKey,
-                model = adsWidgetData,
-                defEnabled = defaultEnable,
-                isNativeAd = true
-            )
-            showNativeAdmob(
-                activity = activity,
-                adLayout = adLayout,
-                adKey = adKey,
-                shimmerInfo = showShimmerLayout,
-                oneTimeUse = showNewAdEveryTime,
-                requestNewOnShow = requestNewOnShow,
-                listener = listener,
-                showOnlyIfAdAvailable = showOnlyIfAdAvailable,
-                showFromHistory = showFromHistory
-            )
-        }
+    apply {
+        attachWithLifecycle(lifecycle = lifecycle, forBanner = false, isJetpackCompose = false)
+        setWidgetKey(
+            placementKey = placementKey,
+            adKey = adKey,
+            model = adsWidgetData,
+            defEnabled = defaultEnable,
+            isNativeAd = true
+        )
+        showNativeAdmob(
+            activity = activity,
+            adLayout = adLayout,
+            adKey = adKey,
+            shimmerInfo = showShimmerLayout,
+            oneTimeUse = showNewAdEveryTime,
+            requestNewOnShow = requestNewOnShow,
+            listener = listener,
+            showOnlyIfAdAvailable = showOnlyIfAdAvailable,
+            showFromHistory = showFromHistory
+        )
     }
 }
 
@@ -70,31 +66,21 @@ fun AdsUiWidget.sdkNativeAd(
     adsWidgetData: AdsWidgetData? = null,
     listener: UiAdsListener? = null
 ) {
-    if (activity == null) {
-        "Pass Activity When Calling sdkNativeAd".errorLogging()
-    } else {
-        apply {
-            attachWithLifecycle(lifecycle = lifecycle, forBanner = false, isJetpackCompose = false)
-            setWidgetKey(
-                placementKey = placementKey,
-                adKey = adKey,
-                model = adsWidgetData,
-                defEnabled = defaultEnable,
-                isNativeAd = true
-            )
-            showNativeAdmob(
-                activity = activity,
-                adLayout = LayoutInfo.LayoutByName(adLayout),
-                adKey = adKey,
-                shimmerInfo = showShimmerLayout,
-                oneTimeUse = showNewAdEveryTime,
-                requestNewOnShow = requestNewOnShow,
-                listener = listener,
-                showOnlyIfAdAvailable = showOnlyIfAdAvailable,
-                showFromHistory = showFromHistory
-            )
-        }
-    }
+    sdkNativeAdd(
+        adLayout = LayoutInfo.LayoutByName(adLayout),
+        adKey = adKey,
+        placementKey = placementKey,
+        lifecycle = lifecycle,
+        activity = activity,
+        showShimmerLayout = showShimmerLayout,
+        requestNewOnShow = requestNewOnShow,
+        showNewAdEveryTime = showNewAdEveryTime,
+        showOnlyIfAdAvailable = showOnlyIfAdAvailable,
+        showFromHistory = showFromHistory,
+        defaultEnable = defaultEnable,
+        adsWidgetData = adsWidgetData,
+        listener = listener
+    )
 }
 
 fun AdsUiWidget.sdkBannerAd(

@@ -114,6 +114,12 @@ class NativeAdWidget @JvmOverloads constructor(
 
     override fun populateAd() {
         layoutView?.let {
+            /*it.inflateLayoutByLayoutInfo(activity!!)?.let {
+                it.parent?.let { parent ->
+                    (parent as ViewGroup).removeView(it)
+                }
+                addView(it)
+            }*/
             showNativeAd(view = it, onShown = {
                 if (oneTimeUse) {
                     adsController?.destroyAd(activity!!)
@@ -167,7 +173,6 @@ class NativeAdWidget @JvmOverloads constructor(
                     shimmerLayout?.addView(adLayout)
                     shimmerLayout
                 }
-
                 is ShimmerInfo.ShimmerByView -> {
                     if (info.addInAShimmerView) {
                         info.layoutView?.let { view ->
@@ -189,7 +194,6 @@ class NativeAdWidget @JvmOverloads constructor(
                     null
                 }
             }
-
             removeAllViews()
             if (shimmerView != null) {
                 try {

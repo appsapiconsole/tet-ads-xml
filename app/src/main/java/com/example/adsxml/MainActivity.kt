@@ -2,22 +2,27 @@ package com.example.adsxml
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import com.example.adsxml.databinding.ActivityMainBinding
 import com.monetization.adsmain.commons.addNewController
 import com.monetization.adsmain.commons.loadAd
-import com.monetization.adsmain.commons.loadAdDirectly
 import com.monetization.adsmain.commons.sdkBannerAd
 import com.monetization.adsmain.commons.sdkNativeAd
+import com.monetization.adsmain.commons.sdkNativeAdd
 import com.monetization.adsmain.splash.AdmobSplashAdController
 import com.monetization.bannerads.BannerAdSize
 import com.monetization.bannerads.BannerAdType
+import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.NativeTemplates
 import com.monetization.core.commons.Utils.resToView
 import com.monetization.core.listeners.UiAdsListener
 import com.monetization.core.msgs.MessagesType
 import com.monetization.core.ui.LayoutInfo
+import com.monetization.core.ui.ShimmerInfo
 import com.monetization.core.utils.dialog.SdkDialogs
 import com.monetization.core.utils.dialog.showNormalLoadingDialog
 import com.monetization.interstitials.AdmobInterstitialAdsManager
@@ -48,7 +53,7 @@ class MainActivity : ComponentActivity() {
             "Native", listOf("", "", "", "")
         )
         binding.preloadAd.setOnClickListener {
-            "Inter".loadAd(true.toConfigString())
+            "Inter".loadAd(true.toConfigString(), this@MainActivity, adType = AdType.NATIVE)
         }
         binding.fetchConfig.setOnClickListener {
             fetchRemoteConfigController {
@@ -56,7 +61,6 @@ class MainActivity : ComponentActivity() {
             }
         }
         binding.reloadAd.setOnClickListener {
-            "Native".loadAdDirectly()
         }
         val sdkDialogs = SdkDialogs(this@MainActivity)
 
@@ -103,17 +107,26 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showNativeAd() {
-        binding.adFrame.sdkNativeAd(
-            adLayout = NativeTemplates.LargeNative,
-            adKey = "Native",
-            placementKey = true.toConfigString(),
-            showNewAdEveryTime = true,
-            lifecycle = lifecycle,
-            listener = object : UiAdsListener {
-                override fun onAdClicked(key: String) {
-                    super.onAdClicked(key)
-                }
-            })
+        val view = R.layout.small_native_ad_main.resToView(this)
+        val ctaBtn = view?.findViewById<AppCompatButton>(R.id.ad_call_to_action)
+        ctaBtn?.setTextColor(ContextCompat.getColor(this, R.color.red))
+        ctaBtn?.setBackgroundColor(ContextCompat.getColor(this, R.color.black))
+        view?.let {
+            binding.adFrame.sdkNativeAdd(
+                adLayout = LayoutInfo.LayoutByName("small_native_ad_main"),
+                adKey = "Native",
+                placementKey = true.toConfigString(),
+                showNewAdEveryTime = true,
+                showShimmerLayout = ShimmerInfo.GivenLayout(),
+                lifecycle = lifecycle,
+                listener = object : UiAdsListener {
+                    override fun onAdClicked(key: String) {
+                        super.onAdClicked(key)
+                    }
+                },
+                activity = this
+            )
+        }
     }
 
     fun showInterstitial(onAdDismiss: (Boolean) -> Unit) {

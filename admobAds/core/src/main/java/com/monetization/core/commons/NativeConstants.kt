@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import com.monetization.core.R
 import com.monetization.core.ui.LayoutInfo
 
 object NativeTemplates {
@@ -63,7 +65,10 @@ object NativeConstants {
                 this.layoutRes.inflateLayoutById(context)
             }
 
-            is LayoutInfo.LayoutByView -> this.view
+            is LayoutInfo.LayoutByView -> {
+//                val newView = LayoutInflater.from(this.view.context).inflate(this.layoutId, null, false)
+                this.view
+            }
         }
     }
 
@@ -74,6 +79,7 @@ object NativeConstants {
     private fun Int.getAdLayoutByXmlReference(context: Context): View {
         return LayoutInflater.from(context).inflate(this, null, false)
     }
+
     fun String.inflateLayoutByName(context: Context): View {
         return getAdLayout(context)
     }

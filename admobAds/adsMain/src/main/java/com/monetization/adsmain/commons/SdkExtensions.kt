@@ -18,7 +18,7 @@ fun AdsUiWidget.sdkNativeAdd(
     adKey: String,
     placementKey: String,
     lifecycle: Lifecycle,
-    activity: Activity? = SdkConfigs.getCurrentActivityRef(),
+    activity: Activity,
     showShimmerLayout: ShimmerInfo = ShimmerInfo.GivenLayout(),
     requestNewOnShow: Boolean = false,
     showNewAdEveryTime: Boolean = true,
@@ -54,12 +54,13 @@ fun AdsUiWidget.sdkNativeAdd(
         }
     }
 }
+
 fun AdsUiWidget.sdkNativeAd(
     adLayout: String,
     adKey: String,
     placementKey: String,
     lifecycle: Lifecycle,
-    activity: Activity? = SdkConfigs.getCurrentActivityRef(),
+    activity: Activity,
     showShimmerLayout: ShimmerInfo = ShimmerInfo.GivenLayout(),
     requestNewOnShow: Boolean = false,
     showNewAdEveryTime: Boolean = true,
@@ -100,7 +101,7 @@ fun AdsUiWidget.sdkBannerAd(
     adKey: String,
     placementKey: String,
     lifecycle: Lifecycle,
-    activity: Activity? = SdkConfigs.getCurrentActivityRef(),
+    activity: Activity,
     type: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
     showShimmerLayout: ShimmerInfo = ShimmerInfo.GivenLayout(),
     requestNewOnShow: Boolean = false,

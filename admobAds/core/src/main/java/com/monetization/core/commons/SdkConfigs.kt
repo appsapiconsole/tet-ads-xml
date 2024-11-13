@@ -161,7 +161,7 @@ object SdkConfigs {
     }
 
     private var adsActivityRef: Activity? = null
-    fun getCurrentActivityRef() = adsActivityRef
+//    fun getCurrentActivityRef() = adsActivityRef
 
     fun setActivity(p0: Activity?) {
         adsActivityRef = p0

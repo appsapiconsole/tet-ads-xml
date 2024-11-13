@@ -214,7 +214,7 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         isLoadAdCalled = true
         adsController = adsManager.getAdController(key)
         if (adsController == null) {
-            logAds("Controller for $key, is not available")
+            logAds("Controller for $key, is not available",true)
             makeGone()
             return
         }

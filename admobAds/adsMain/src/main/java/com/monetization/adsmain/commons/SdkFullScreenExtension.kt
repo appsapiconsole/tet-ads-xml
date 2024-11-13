@@ -9,32 +9,6 @@ import com.monetization.core.utils.dialog.SdkDialogs
 import com.monetization.core.utils.dialog.showNormalLoadingDialog
 
 
-fun Activity.showFullScreenAd(
-    adKey: String,
-    isInstant: Boolean = true,
-    onDismiss: (Boolean) -> Unit
-) {
-    val adType = adKey.getAdTypeByKey()
-        ?: throw IllegalArgumentException("No Controller is available against $adKey")
-    val sdkDialog = SdkDialogs(this)
-    FullScreenAdsShowManager.showFullScreenAd(
-        placementKey = AdsCommons.adEnabledSdkString,
-        key = adKey,
-        adType = adType,
-        isInstantAd = isInstant,
-        onLoadingDialogStatusChange = {
-            if (it) {
-                sdkDialog.showNormalLoadingDialog()
-            } else {
-                sdkDialog.hideLoadingDialog()
-            }
-        },
-        onAdDismiss = { shown: Boolean, msg: MessagesType? ->
-            onDismiss.invoke(shown)
-        }
-    )
-}
-
 fun String.getAdTypeByKey(): AdType? {
     return if (isAdKeyRegistered(AdType.INTERSTITIAL)) {
         AdType.INTERSTITIAL

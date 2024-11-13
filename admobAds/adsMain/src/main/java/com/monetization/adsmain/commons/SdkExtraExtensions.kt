@@ -27,21 +27,13 @@ fun String.isAdRequesting(adType: AdType): Boolean {
     return getAdController(adType)?.isAdRequesting() ?: false
 }
 
-fun String.loadAdDirectly() = loadAd(adEnabledSdkString)
-
 fun String.loadAd(
     placementKey: String,
-    activity: Activity? = SdkConfigs.getCurrentActivityRef(),
-    adType: AdType? = getAdTypeByKey(),
+    activity: Activity,
+    adType: AdType,
     listener: AdsLoadingStatusListener? = null
 ) {
-    adType?.let {
-        if (activity != null) {
-            getAdController(adType)?.loadAd(placementKey, activity, "", listener)
-        } else {
-            "Pass Activity While Loading Ads".errorLogging()
-        }
-    } ?: throw IllegalArgumentException("Ad Type must not be null")
+    getAdController(adType)?.loadAd(placementKey, activity, "", listener)
 }
 
 fun String.errorLogging() {

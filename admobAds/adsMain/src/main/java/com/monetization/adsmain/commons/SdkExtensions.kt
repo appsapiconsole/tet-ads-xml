@@ -1,6 +1,7 @@
 package com.monetization.adsmain.commons
 
 import android.app.Activity
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import com.monetization.adsmain.widgets.AdsUiWidget
 import com.monetization.bannerads.BannerAdSize
@@ -12,6 +13,47 @@ import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
 
 
+fun AdsUiWidget.sdkNativeAdd(
+    adLayout: LayoutInfo,
+    adKey: String,
+    placementKey: String,
+    lifecycle: Lifecycle,
+    activity: Activity? = SdkConfigs.getCurrentActivityRef(),
+    showShimmerLayout: ShimmerInfo = ShimmerInfo.GivenLayout(),
+    requestNewOnShow: Boolean = false,
+    showNewAdEveryTime: Boolean = true,
+    showOnlyIfAdAvailable: Boolean = false,
+    showFromHistory: Boolean = false,
+    defaultEnable: Boolean = true,
+    adsWidgetData: AdsWidgetData? = null,
+    listener: UiAdsListener? = null
+) {
+    if (activity == null) {
+        "Pass Activity When Calling sdkNativeAd".errorLogging()
+    } else {
+        apply {
+            attachWithLifecycle(lifecycle = lifecycle, forBanner = false, isJetpackCompose = false)
+            setWidgetKey(
+                placementKey = placementKey,
+                adKey = adKey,
+                model = adsWidgetData,
+                defEnabled = defaultEnable,
+                isNativeAd = true
+            )
+            showNativeAdmob(
+                activity = activity,
+                adLayout = adLayout,
+                adKey = adKey,
+                shimmerInfo = showShimmerLayout,
+                oneTimeUse = showNewAdEveryTime,
+                requestNewOnShow = requestNewOnShow,
+                listener = listener,
+                showOnlyIfAdAvailable = showOnlyIfAdAvailable,
+                showFromHistory = showFromHistory
+            )
+        }
+    }
+}
 fun AdsUiWidget.sdkNativeAd(
     adLayout: String,
     adKey: String,

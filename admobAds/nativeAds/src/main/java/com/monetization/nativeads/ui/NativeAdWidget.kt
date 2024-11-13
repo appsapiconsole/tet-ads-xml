@@ -23,8 +23,6 @@ import com.monetization.nativeads.AdmobNativeAd
 import com.monetization.nativeads.AdmobNativeAdsController
 import com.monetization.nativeads.AdmobNativeAdsManager
 import com.monetization.nativeads.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NativeAdWidget @JvmOverloads constructor(
@@ -80,14 +78,12 @@ class NativeAdWidget @JvmOverloads constructor(
         if (showFromHistory && adsController?.getHistory()?.isNotEmpty() == true) {
             listener.onAdLoaded(key)
         } else {
-            CoroutineScope(Dispatchers.IO).launch {
-                (adsController as? AdmobNativeAdsController)?.loadAd(
-                    placementKey = adEnabledSdkString,
-                    activity = (activity!!),
-                    calledFrom = "Base Native Activity",
-                    callback = listener
-                )
-            }
+            (adsController as? AdmobNativeAdsController)?.loadAd(
+                placementKey = adEnabledSdkString,
+                activity = (activity!!),
+                calledFrom = "Base Native Activity",
+                callback = listener
+            )
         }
     }
 
@@ -193,14 +189,13 @@ class NativeAdWidget @JvmOverloads constructor(
                     null
                 }
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                removeAllViews()
-                if (shimmerView != null) {
-                    try {
-                        addView(shimmerView)
-                    } catch (_: Exception) {
 
-                    }
+            removeAllViews()
+            if (shimmerView != null) {
+                try {
+                    addView(shimmerView)
+                } catch (_: Exception) {
+
                 }
             }
         } catch (e: Exception) {

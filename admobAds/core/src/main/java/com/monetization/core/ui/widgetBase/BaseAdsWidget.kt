@@ -24,9 +24,6 @@ import com.monetization.core.managers.AdsManager
 import com.monetization.core.models.RefreshAdInfo
 import com.monetization.core.ui.AdsWidgetData
 import com.monetization.core.ui.ShimmerInfo
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads constructor(
     context: Context,
@@ -114,38 +111,32 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
     fun getAdsLoadingListener(): AdsLoadingStatusListener {
         return object : AdsLoadingStatusListener {
             override fun onAdRequested(adKey: String) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    uiListener?.onAdRequested(adKey)
-                }
+                uiListener?.onAdRequested(adKey)
             }
 
             override fun onClicked(adKey: String) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    uiListener?.onAdClicked(adKey)
-                }
+                uiListener?.onAdClicked(adKey)
             }
 
             override fun onAdLoaded(adKey: String) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    uiListener?.onAdLoaded(adKey)
-                    if (adLoaded) {
-                        return@launch
-                    }
-                    adOnLoaded()
+                uiListener?.onAdLoaded(adKey)
+                if (adLoaded) {
+                    return
                 }
+                adOnLoaded()
             }
 
             override fun onImpression(adKey: String) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    uiListener?.onImpression(adKey)
-                }
+
+                uiListener?.onImpression(adKey)
+
             }
 
             override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
-                CoroutineScope(Dispatchers.Main).launch {
-                    uiListener?.onAdFailed(adKey, message, code)
-                    adOnFailed()
-                }
+
+                uiListener?.onAdFailed(adKey, message, code)
+                adOnFailed()
+
             }
         }
     }
@@ -240,15 +231,14 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
     }
 
     private fun doPopulateAd() {
-        CoroutineScope(Dispatchers.Main).launch {
-            logAds("doPopulateAd(key=$key) isViewInPause=${isViewInPause}", isViewInPause)
-            if (isViewInPause.not()) {
-                adPopulated = true
-                makeVisible()
-                removeAllViews()
-                populateAd()
-            }
+        logAds("doPopulateAd(key=$key) isViewInPause=${isViewInPause}", isViewInPause)
+        if (isViewInPause.not()) {
+            adPopulated = true
+            makeVisible()
+            removeAllViews()
+            populateAd()
         }
+
     }
 
     fun adPopulated(): Boolean {

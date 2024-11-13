@@ -23,9 +23,6 @@ import com.monetization.core.managers.AdsLoadingStatusListener
 import com.monetization.core.models.RefreshAdInfo
 import com.monetization.core.ui.ShimmerInfo
 import com.monetization.core.ui.widgetBase.BaseAdsWidget
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class BannerAdWidget @JvmOverloads constructor(
     context: Context,
@@ -169,7 +166,7 @@ class BannerAdWidget @JvmOverloads constructor(
                                 shimmerLayout?.removeViewsFromIt()
                                 shimmerLayout?.addView(view)
                                 shimmerLayout
-                            }catch (_:Exception){
+                            } catch (_: Exception) {
                                 null
                             }
                         } ?: run { null }
@@ -182,17 +179,12 @@ class BannerAdWidget @JvmOverloads constructor(
                     null
                 }
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                removeAllViews()
-                if (shimmerView != null) {
-//                    (parent as? ViewGroup)?.removeView(shimmerView)
-//                    post {
-                    try {
-                        addView(shimmerView)
-                    } catch (_: Exception) {
+            removeAllViews()
+            if (shimmerView != null) {
+                try {
+                    addView(shimmerView)
+                } catch (_: Exception) {
 
-                    }
-//                    }
                 }
             }
         } catch (e: Exception) {

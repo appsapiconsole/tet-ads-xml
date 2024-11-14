@@ -14,12 +14,14 @@ import com.monetization.adsmain.commons.sdkBannerAd
 import com.monetization.adsmain.commons.sdkNativeAd
 import com.monetization.adsmain.commons.sdkNativeAdd
 import com.monetization.adsmain.splash.AdmobSplashAdController
+import com.monetization.adsmain.splash.SplashAdType
 import com.monetization.bannerads.BannerAdSize
 import com.monetization.bannerads.BannerAdType
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.NativeTemplates
 import com.monetization.core.commons.Utils.resToView
 import com.monetization.core.listeners.UiAdsListener
+import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.core.msgs.MessagesType
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
@@ -45,41 +47,62 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         AdmobInterstitialAdsManager.addNewController(
-            "Inter", listOf("")
+            "Splash", listOf("")
         )
-        AdmobNativeAdsManager.addNewController(
-            "Native", listOf("", "", "", "")
-        )
-        binding.preloadAd.setOnClickListener {
-            "Inter".loadAd(true.toConfigString(), this@MainActivity, adType = AdType.NATIVE)
-        }
-        binding.fetchConfig.setOnClickListener {
-            fetchRemoteConfigController {
-                showNativeAd()
-            }
-        }
-        binding.reloadAd.setOnClickListener {
-        }
-        val sdkDialogs = SdkDialogs(this@MainActivity)
 
-        binding.refreshAd.setOnClickListener {
-            val view = LayoutInflater.from(this@MainActivity)
-                .inflate(
-                    com.monetization.nativeads.R.layout.small_native_ad,
-                    null, false
-                )
-            binding.adFrame.getNativeWidget().showNativeAd(
-                view = LayoutInfo.LayoutByView(view),
-                onShown = {
-
+        splashAdController.showSplashAd(
+            enableKey = true.toConfigString(),
+            adType = SplashAdType.AdmobInter("Splash"),
+            activity = this,
+            lifecycle = lifecycle,
+            callBack = object : FullScreenAdsShowListener {
+                override fun onAdDismiss(adKey: String, adShown: Boolean, rewardEarned: Boolean) {
+                    super.onAdDismiss(adKey, adShown, rewardEarned)
+                    Toast.makeText(this@MainActivity, "Did it=$adShown", Toast.LENGTH_SHORT).show()
                 }
-            )
-        }
-        binding.showAd.setOnClickListener {
-            showNativeAd()
-        }
+            },
+            timeInMillis = 15_000
+        )
+
+
+        /*
+
+                AdmobInterstitialAdsManager.addNewController(
+                    "Inter", listOf("")
+                )
+                AdmobNativeAdsManager.addNewController(
+                    "Native", listOf("", "", "", "")
+                )
+                binding.preloadAd.setOnClickListener {
+                    "Inter".loadAd(true.toConfigString(), this@MainActivity, adType = AdType.NATIVE)
+                }
+                binding.fetchConfig.setOnClickListener {
+                    fetchRemoteConfigController {
+                        showNativeAd()
+                    }
+                }
+                binding.reloadAd.setOnClickListener {
+                }
+                val sdkDialogs = SdkDialogs(this@MainActivity)
+
+                binding.refreshAd.setOnClickListener {
+                    val view = LayoutInflater.from(this@MainActivity)
+                        .inflate(
+                            com.monetization.nativeads.R.layout.small_native_ad,
+                            null, false
+                        )
+                    binding.adFrame.getNativeWidget().showNativeAd(
+                        view = LayoutInfo.LayoutByView(view),
+                        onShown = {
+
+                        }
+                    )
+                }
+                binding.showAd.setOnClickListener {
+                    showNativeAd()
+                }
+        */
 
     }
 

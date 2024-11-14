@@ -53,14 +53,14 @@ object CounterManager {
         onDismiss: (Boolean, MessagesType?) -> Unit,
         showAd: () -> Unit
     ) {
-        if (counterEnable.not() || key == null) {
+        if (counterEnable.not() || key == null ) {
             showAd.invoke()
             return
         }
         val model = key.getCounterModel()
         val counterReached = model.isCounterReached()
         if (counterReached) {
-            logCounterDetails("Counter Reached")
+            logCounterDetails("Counter Reached, model=$model")
             onCounterUpdate?.invoke(model.currentPoint)
             showAd.invoke()
         } else {

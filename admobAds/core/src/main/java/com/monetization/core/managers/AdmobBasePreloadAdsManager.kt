@@ -29,8 +29,12 @@ abstract class AdmobBasePreloadAdsManager(
         isFullScreenAdShowing = false
     }
 
-    private fun allowed(key: String): Boolean {
-        val allowed = SdkConfigs.canShowAds(key, adType)
+    private fun allowed(key: String, placementKey: String): Boolean {
+        val allowed = SdkConfigs.canShowAds(
+            adKey = key,
+            placementKey = placementKey,
+            adType = adType
+        )
         if (allowed.not()) {
             logAds("Ad is restricted by Sdk to show Key=$key,type=$adType", true)
         }
@@ -90,7 +94,7 @@ abstract class AdmobBasePreloadAdsManager(
             onFreeAd(MessagesType.AdNotAvailable)
             return
         }
-        if (allowed(key).not()) {
+        if (allowed(key = key, placementKey = placementKey).not()) {
             onFreeAd(MessagesType.ShowingNotAllowed)
             return
         }

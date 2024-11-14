@@ -106,7 +106,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
             override fun onAdLoaded(adKey: String) {
                 splashAdLoaded = true
                 logAds("Splash Ad onAdLoaded ,Handler Running=$isHandlerRunning")
-                if (isHandlerRunning) {
+                if (isScreenInPause.not()) {
                     removeCallBacks()
                     isAdShowing = true
                     if (splashNormalLoadingTime > 0) {
@@ -267,6 +267,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
     }
 
     private fun onAdDismissed(key: String, adShown: Boolean = false) {
+        logAds("Splash Ad onAdDismissed Called = $key")
         listener?.onAdDismiss(key, adShown)
         isHandlerRunning = false
         mLifecycle?.removeObserver(this)
@@ -304,7 +305,10 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
 
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
-        logAds("Splash Ad On Resume isScreenInPause=$isScreenInPause", true)
+        logAds(
+            "Splash Ad On Resume isScreenInPause=$isScreenInPause,splashAdFailed=${splashAdFailed},isHandlerRunning=$isHandlerRunning,isInterShowing=${isInterShowing}",
+            true
+        )
         if (isScreenInPause) {
             isScreenInPause = false
             if (!isHandlerRunning) {

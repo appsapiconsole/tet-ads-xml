@@ -41,6 +41,7 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
     var isLoadAdCalled = false
     var activity: Activity? = null
     var key = ""
+    var placementKey = ""
     var isAdEnabled = false
     private var isViewInPause = false
     var adLoaded = false
@@ -84,7 +85,7 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         showFromHistory: Boolean = false,
         refreshAdInfo: RefreshAdInfo = RefreshAdInfo()
     ) {
-        if (SdkConfigs.canShowAds(adKey, adType).not()) {
+        if (SdkConfigs.canShowAds(adKey, placementKey, adType).not()) {
             logAds("Ad Showing is restricted against key=$adKey for $adType", true)
             makeGone()
             return
@@ -207,7 +208,7 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         isLoadAdCalled = true
         adsController = adsManager.getAdController(key)
         if (adsController == null) {
-            logAds("Controller for $key, is not available",true)
+            logAds("Controller for $key, is not available", true)
             makeGone()
             return
         }

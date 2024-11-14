@@ -45,6 +45,7 @@ class BannerAdWidget @JvmOverloads constructor(
         listener: UiAdsListener?
     ) {
         this.bannerAdType = bannerAdType
+
         onShowAdCalled(
             adKey = adKey,
             activity = activity,
@@ -209,9 +210,13 @@ class BannerAdWidget @JvmOverloads constructor(
                     adType = AdType.BANNER,
                     listener = null,
                     isForRefresh = true,
-                    refreshAdInfo = refreshAdInfo,
+                    refreshAdInfo = refreshAdInfo
                 )
             }
         }
+    }
+
+    fun setWidgetKey(key: String) {
+        placementKey = key
     }
 }

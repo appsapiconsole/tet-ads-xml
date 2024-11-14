@@ -173,6 +173,7 @@ class NativeAdWidget @JvmOverloads constructor(
                     shimmerLayout?.addView(adLayout)
                     shimmerLayout
                 }
+
                 is ShimmerInfo.ShimmerByView -> {
                     if (info.addInAShimmerView) {
                         info.layoutView?.let { view ->
@@ -228,6 +229,10 @@ class NativeAdWidget @JvmOverloads constructor(
                 )
             }
         }
+    }
+
+    fun setWidgetKey(key: String) {
+        placementKey = key
     }
 
 }

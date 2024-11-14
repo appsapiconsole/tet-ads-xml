@@ -74,7 +74,8 @@ class AdsUiWidget @JvmOverloads constructor(
             ),
             placementKey.getRemoteAdWidgetModel(adKey, model)
         )
-
+        bannerWidget.setWidgetKey(placementKey)
+        nativeWidget.setWidgetKey(placementKey)
         adEnabled = enabled
         adsWidgetDataModel = widgetModel
         nativeWidget.setAdsWidgetData(

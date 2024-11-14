@@ -41,11 +41,11 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
             }
         })
         SdkConfigs.setListener(listener = object : SdkListener {
-            override fun canShowAd(adType: AdType, adKey: String): Boolean {
+            override fun canShowAd(adType: AdType, placementKey: String, adKey: String): Boolean {
                 return true
             }
 
-            override fun canLoadAd(adType: AdType, adKey: String): Boolean {
+            override fun canLoadAd(adType: AdType, placementKey: String, adKey: String): Boolean {
                 return true
             }
         }, testModeEnable = true)

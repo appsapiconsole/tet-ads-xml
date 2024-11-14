@@ -134,7 +134,7 @@ object SdkConfigs {
         return sdkListener
     }
 
-    fun canShowAds(adKey: String, adType: AdType): Boolean {
+    fun canShowAds(adKey: String, placementKey: String, adType: AdType): Boolean {
         if (sdkListener == null) {
             throw IllegalArgumentException("Please attach sdk listeners like SdkConfigs.setListener(this)")
         } else if (disableAllAds) {
@@ -143,11 +143,15 @@ object SdkConfigs {
         } else if (isAdManuallyBlockedForShow(adKey, adType)) {
             return false
         } else {
-            return sdkListener?.canShowAd(adType, adKey) ?: false
+            return sdkListener?.canShowAd(
+                adType = adType,
+                placementKey = placementKey,
+                adKey = adKey
+            ) ?: false
         }
     }
 
-    fun canLoadAds(adKey: String, adType: AdType): Boolean {
+    fun canLoadAds(adKey: String,placementKey: String, adType: AdType): Boolean {
         if (sdkListener == null) {
             throw IllegalArgumentException("Please attach sdk listeners like SdkConfigs.setListener(this)")
         } else if (disableAllAds) {
@@ -156,7 +160,11 @@ object SdkConfigs {
         } else if (isAdManuallyBlockedForLoad(adKey, adType)) {
             return false
         } else {
-            return sdkListener?.canLoadAd(adType, adKey) ?: false
+            return sdkListener?.canLoadAd(
+                adType = adType,
+                placementKey = placementKey,
+                adKey = adKey
+            ) ?: false
         }
     }
 

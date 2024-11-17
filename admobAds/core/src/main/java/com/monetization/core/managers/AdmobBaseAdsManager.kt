@@ -19,9 +19,9 @@ abstract class AdmobBaseAdsManager<T : AdsControllerBaseHelper>(adType: AdType) 
         }
     }
 
-    override fun addNewController(controller: T) {
+    override fun addNewController(controller: T, replace: Boolean) {
         val key = controller.getAdKey()
-        if (adsMap[key] == null) {
+        if (adsMap[key] == null || replace) {
             adsMap[key] = controller
             AdsManagerHistoryHelper.addController(controller)
         }

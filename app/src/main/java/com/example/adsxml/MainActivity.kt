@@ -11,14 +11,13 @@ import com.example.adsxml.databinding.ActivityMainBinding
 import com.monetization.adsmain.commons.addNewController
 import com.monetization.adsmain.commons.loadAd
 import com.monetization.adsmain.commons.sdkBannerAd
-import com.monetization.adsmain.commons.sdkNativeAd
 import com.monetization.adsmain.commons.sdkNativeAdd
+import com.monetization.adsmain.showRates.full_screen_ads.FullScreenAdsShowManager
 import com.monetization.adsmain.splash.AdmobSplashAdController
 import com.monetization.adsmain.splash.SplashAdType
 import com.monetization.bannerads.BannerAdSize
 import com.monetization.bannerads.BannerAdType
 import com.monetization.core.ad_units.core.AdType
-import com.monetization.core.commons.NativeTemplates
 import com.monetization.core.commons.Utils.resToView
 import com.monetization.core.listeners.UiAdsListener
 import com.monetization.core.managers.FullScreenAdsShowListener
@@ -30,7 +29,6 @@ import com.monetization.core.utils.dialog.showNormalLoadingDialog
 import com.monetization.interstitials.AdmobInterstitialAdsManager
 import com.monetization.interstitials.extensions.InstantInterstitialAdsManager
 import com.monetization.interstitials.extensions.counter.InstantCounterInterAdsManager
-import com.monetization.nativeads.AdmobNativeAdsManager
 import com.remote.firebaseconfigs.RemoteCommons.toConfigString
 import com.remote.firebaseconfigs.SdkConfigListener
 import com.remote.firebaseconfigs.SdkRemoteConfigController
@@ -47,80 +45,36 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         AdmobInterstitialAdsManager.addNewController(
-            "Splash", listOf("")
+            "Inter", listOf("")
         )
 
-        splashAdController.showSplashAd(
-            enableKey = true.toConfigString(),
-            adType = SplashAdType.AdmobInter("Splash"),
-            activity = this,
-            lifecycle = lifecycle,
-            callBack = object : FullScreenAdsShowListener {
-                override fun onAdDismiss(adKey: String, adShown: Boolean, rewardEarned: Boolean) {
-                    super.onAdDismiss(adKey, adShown, rewardEarned)
-                    Toast.makeText(this@MainActivity, "Did it=$adShown", Toast.LENGTH_SHORT).show()
-                }
-            },
-            timeInMillis = 15_000
-        )
+//        showSplashAd {
+//        }
+        "Inter".loadAd(true.toConfigString(), this@MainActivity, AdType.INTERSTITIAL)
+        binding.showAd.setOnClickListener {
+            showCounterAd {
 
-
-        /*
-
-                AdmobInterstitialAdsManager.addNewController(
-                    "Inter", listOf("")
-                )
-                AdmobNativeAdsManager.addNewController(
-                    "Native", listOf("", "", "", "")
-                )
-                binding.preloadAd.setOnClickListener {
-                    "Inter".loadAd(true.toConfigString(), this@MainActivity, adType = AdType.NATIVE)
-                }
-                binding.fetchConfig.setOnClickListener {
-                    fetchRemoteConfigController {
-                        showNativeAd()
-                    }
-                }
-                binding.reloadAd.setOnClickListener {
-                }
-                val sdkDialogs = SdkDialogs(this@MainActivity)
-
-                binding.refreshAd.setOnClickListener {
-                    val view = LayoutInflater.from(this@MainActivity)
-                        .inflate(
-                            com.monetization.nativeads.R.layout.small_native_ad,
-                            null, false
-                        )
-                    binding.adFrame.getNativeWidget().showNativeAd(
-                        view = LayoutInfo.LayoutByView(view),
-                        onShown = {
-
-                        }
-                    )
-                }
-                binding.showAd.setOnClickListener {
-                    showNativeAd()
-                }
-        */
+            }
+        }
 
     }
 
-    private fun showCounterAd(onAdDismiss: (Boolean, MessagesType?) -> Unit) {
-        val sdkDialog = SdkDialogs(this@MainActivity)
-        InstantCounterInterAdsManager.showInstantInterstitialAd(
+    private fun showCounterAd(onAdDismiss: (Boolean) -> Unit) {
+        FullScreenAdsShowManager.showFullScreenAd(
             placementKey = true.toConfigString(),
-            activity = this@MainActivity,
             key = "Inter",
-            onAdDismiss = onAdDismiss,
-            onLoadingDialogStatusChange = {
-                if (it) {
-                    sdkDialog.showNormalLoadingDialog()
-                } else {
-                    sdkDialog.hideLoadingDialog()
-                }
+            requestNewIfAdShown = true,
+            normalLoadingTime = 0,
+            instantLoadingTime = 0,
+            onAdDismiss = { it, msg ->
+                onAdDismiss.invoke(it)
             },
-            counterKey = "MainScreen"
+            activity = this@MainActivity,
+            adType = AdType.INTERSTITIAL,
+            isInstantAd = true,
+            counterKey = ""
         )
     }
 
@@ -208,5 +162,25 @@ class MainActivity : ComponentActivity() {
             fetchOutTimeInSeconds = 8L,
             onUpdate = {}
         )
+    }
+
+    private fun showSplashAd(
+        onAdDismiss: (Boolean) -> Unit
+    ) {
+        splashAdController.showSplashAd(
+            enableKey = true.toConfigString(),
+            adType = SplashAdType.AdmobInter("Splash"),
+            activity = this,
+            lifecycle = lifecycle,
+            callBack = object : FullScreenAdsShowListener {
+                override fun onAdDismiss(adKey: String, adShown: Boolean, rewardEarned: Boolean) {
+                    super.onAdDismiss(adKey, adShown, rewardEarned)
+                    Toast.makeText(this@MainActivity, "Did it=$adShown", Toast.LENGTH_SHORT).show()
+                    onAdDismiss.invoke(adShown)
+                }
+            },
+            timeInMillis = 15_000
+        )
+
     }
 }

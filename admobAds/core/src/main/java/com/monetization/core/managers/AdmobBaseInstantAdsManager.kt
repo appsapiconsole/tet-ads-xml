@@ -119,15 +119,14 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
             onFreeAd(MessagesType.AdNotEnabled)
             return
         }
-        if (SdkConfigs.canShowAds(adKey = key, placementKey = placementKey, adType = adType).not()) {
+        if (SdkConfigs.canShowAds(adKey = key, placementKey = placementKey, adType = adType)
+                .not()
+        ) {
             logAds("Ad is restricted by Sdk to show Key=$key,type=$adType", true)
             onFreeAd(MessagesType.ShowingNotAllowed)
             return
         }
         isHandlerRunning = false
-        if (normalLoadingTime > 0 || instantLoadingTime > 0) {
-            loadingDialogListener?.invoke(true)
-        }
         nowShowAd(
             activity = activity,
             normalLoadingTime = normalLoadingTime,
@@ -142,15 +141,21 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
         normalLoadingTime: Long,
         instantLoadingTime: Long,
         controller: AdsController,
-        showAd: () -> Unit,
+        showAd: () -> Unit
     ) {
         val adToShow = controller.getAvailableAd()
         if (adToShow != null) {
-            Handler(Looper.getMainLooper()).postDelayed({
-                loadingDialogListener?.invoke(false)
+            if (normalLoadingTime <= 0) {
                 showAd.invoke()
-            }, normalLoadingTime)
-        } else {
+            } else {
+                loadingDialogListener?.invoke(true)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    loadingDialogListener?.invoke(false)
+                    showAd.invoke()
+                }, normalLoadingTime)
+            }
+        } else if (instantLoadingTime >= 1000) {
+            loadingDialogListener?.invoke(true)
             startHandler(instantLoadingTime)
             uiAdsListener?.onAdRequested(key = controller.getAdKey())
             controller.loadAd(
@@ -179,6 +184,9 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
                         onFreeAd(MessagesType.AdLoadFailed)
                     }
                 })
+        } else {
+            logAds("Not enough time to load ad ,instantLoadingTime must be greater than equal to 1000 millis")
+            onFreeAd(MessagesType.NotEnoughTimeForInstantAd)
         }
     }
 

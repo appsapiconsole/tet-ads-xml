@@ -204,7 +204,7 @@ class NativeAdWidget @JvmOverloads constructor(
                 }
             }
         } catch (e: Exception) {
-            logAds("showShimmerLayout Native=$key Exception=${e.stackTrace}", true)
+            logAds("showShimmerLayout Native=$key Exception=${e.message}", true)
         }
     }
 

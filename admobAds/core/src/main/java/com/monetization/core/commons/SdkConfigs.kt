@@ -6,6 +6,7 @@ import com.facebook.shimmer.BuildConfig
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.listeners.RemoteConfigsProvider
+import com.monetization.core.listeners.SdkDialogsListener
 import com.monetization.core.listeners.SdkListener
 import com.monetization.core.models.ManualBlockModel
 import com.monetization.core.ui.AdsWidgetData
@@ -95,6 +96,7 @@ object SdkConfigs {
 
 
     private var sdkListener: SdkListener? = null
+    private var sdkDialogsListener: SdkDialogsListener? = null
     private var configListener: RemoteConfigsProvider? = null
 
     fun setRemoteConfigsListener(listener: RemoteConfigsProvider) {
@@ -127,6 +129,16 @@ object SdkConfigs {
         setTestModeEnabled(testModeEnable)
     }
 
+    fun setDialogListener(
+        listener: SdkDialogsListener?,
+    ) {
+        sdkDialogsListener = listener
+    }
+
+    fun getSdkDialogListener(): SdkDialogsListener? {
+        return sdkDialogsListener
+    }
+
     fun getListener(): SdkListener? {
         if (sdkListener == null) {
             throw IllegalArgumentException("Please attach sdk listeners like SdkConfigs.setListener(this)")
@@ -151,7 +163,7 @@ object SdkConfigs {
         }
     }
 
-    fun canLoadAds(adKey: String,placementKey: String, adType: AdType): Boolean {
+    fun canLoadAds(adKey: String, placementKey: String, adType: AdType): Boolean {
         if (sdkListener == null) {
             throw IllegalArgumentException("Please attach sdk listeners like SdkConfigs.setListener(this)")
         } else if (disableAllAds) {
@@ -167,12 +179,4 @@ object SdkConfigs {
             ) ?: false
         }
     }
-
-    private var adsActivityRef: Activity? = null
-//    fun getCurrentActivityRef() = adsActivityRef
-
-    fun setActivity(p0: Activity?) {
-        adsActivityRef = p0
-    }
-
 }

@@ -109,6 +109,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 if (isScreenInPause.not()) {
                     removeCallBacks()
                     isAdShowing = true
+                    listener?.onAdLoaded(adKey = adKey)
                     if (splashNormalLoadingTime > 0) {
                         showLoadingDialog?.invoke()
                         try {
@@ -143,7 +144,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
 
     private var isInterShowing = false
     private fun showSplashAd(activity: Activity, adKey: String) {
-        listener?.onAdShown(adKey)
+        listener?.onAdShown(adKey = adKey)
         logAds("showSplashAd Ad Type=$splashAdType")
         val fullScreenAdsShowListener = object : FullScreenAdsShowListener {
             override fun onAdDismiss(adKey: String, adShown: Boolean, rewardEarned: Boolean) {

@@ -20,7 +20,6 @@ object FullScreenAdsShowManager {
     fun showFullScreenAd(
         placementKey: String,
         key: String,
-        onLoadingDialogStatusChange: (Boolean) -> Unit,
         onAdDismiss: (Boolean, MessagesType?) -> Unit,
         activity: Activity,
         isInstantAd: Boolean = false,
@@ -32,7 +31,6 @@ object FullScreenAdsShowManager {
         instantLoadingTime: Long = 8_000,
         counterKey: String? = null,
         onRewarded: ((Boolean) -> Unit)? = null,
-        showBlackBg: ((Boolean) -> Unit)? = null,
         onCounterUpdate: ((Int) -> Unit)? = null,
     ) {
         when (adType) {
@@ -47,7 +45,16 @@ object FullScreenAdsShowManager {
                         normalLoadingTime = normalLoadingTime,
                         instantLoadingTime = instantLoadingTime,
                         requestNewIfAdShown = requestNewIfAdShown,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         onCounterUpdate = onCounterUpdate
                     )
@@ -61,7 +68,16 @@ object FullScreenAdsShowManager {
                         requestNewIfNotAvailable = requestNewIfNotAvailable,
                         requestNewIfAdShown = requestNewIfAdShown,
                         normalLoadingTime = normalLoadingTime,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         onCounterUpdate = onCounterUpdate
                     )
@@ -79,7 +95,16 @@ object FullScreenAdsShowManager {
                         normalLoadingTime = normalLoadingTime,
                         instantLoadingTime = instantLoadingTime,
                         requestNewIfAdShown = requestNewIfAdShown,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         onCounterUpdate = onCounterUpdate
                     )
@@ -93,7 +118,16 @@ object FullScreenAdsShowManager {
                         requestNewIfNotAvailable = requestNewIfNotAvailable,
                         requestNewIfAdShown = requestNewIfAdShown,
                         normalLoadingTime = normalLoadingTime,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         onCounterUpdate = onCounterUpdate
                     )
@@ -111,7 +145,16 @@ object FullScreenAdsShowManager {
                         normalLoadingTime = normalLoadingTime,
                         instantLoadingTime = instantLoadingTime,
                         requestNewIfAdShown = requestNewIfAdShown,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         onRewarded = {
                             onRewarded?.invoke(it)
@@ -128,7 +171,16 @@ object FullScreenAdsShowManager {
                         requestNewIfNotAvailable = requestNewIfNotAvailable,
                         requestNewIfAdShown = requestNewIfAdShown,
                         normalLoadingTime = normalLoadingTime,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         onRewarded = {
                             onRewarded?.invoke(it)
@@ -148,10 +200,26 @@ object FullScreenAdsShowManager {
                         normalLoadingTime = normalLoadingTime,
                         instantLoadingTime = instantLoadingTime,
                         requestNewIfAdShown = requestNewIfAdShown,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         showBlackBg = {
-                            showBlackBg?.invoke(it)
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = true
+                            )
                         }
                     )
                 } else {
@@ -163,10 +231,26 @@ object FullScreenAdsShowManager {
                         requestNewIfAdShown = requestNewIfAdShown,
                         normalLoadingTime = normalLoadingTime,
                         uiAdsListener = uiAdsListener,
-                        onLoadingDialogStatusChange = onLoadingDialogStatusChange,
+                        onLoadingDialogStatusChange = {
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = false
+                            )
+                        },
                         onAdDismiss = onAdDismiss,
                         showBlackBg = {
-                            showBlackBg?.invoke(it)
+                            SdkConfigs.getSdkDialogListener()?.onAdLoadingDialogStateChange(
+                                activity = activity,
+                                placementKey = placementKey,
+                                adKey = key,
+                                adType = adType,
+                                showDialog = it,
+                                isForBlackBg = true
+                            )
                         }
                     )
                 }

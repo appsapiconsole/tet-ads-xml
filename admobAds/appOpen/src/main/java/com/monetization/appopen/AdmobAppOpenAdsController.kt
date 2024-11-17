@@ -23,7 +23,7 @@ class AdmobAppOpenAdsController(
         calledFrom: String,
         callback: AdsLoadingStatusListener?
     ) {
-        val commonLoadChecks = commonLoadAdChecks(placementKey = placementKey,callback)
+        val commonLoadChecks = commonLoadAdChecks(placementKey = placementKey, callback)
         if (commonLoadChecks.not()) {
             return
         }

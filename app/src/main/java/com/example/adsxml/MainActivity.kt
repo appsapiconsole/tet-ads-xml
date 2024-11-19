@@ -1,5 +1,6 @@
 package com.example.adsxml
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.TextView
@@ -47,17 +48,35 @@ class MainActivity : ComponentActivity() {
         setContentView(binding.root)
 
         AdmobInterstitialAdsManager.addNewController(
-            "Inter", listOf("")
+            "Splash", listOf("")
         )
-
-//        showSplashAd {
-//        }
-        "Inter".loadAd(true.toConfigString(), this@MainActivity, AdType.INTERSTITIAL)
         binding.showAd.setOnClickListener {
-            showCounterAd {
-
+            showSplashAd {
+                startActivity(
+                    Intent(this@MainActivity, ComposeActivity::class.java)
+                )
             }
         }
+
+    }
+
+    private fun showSplashAd(
+        onAdDismiss: (Boolean) -> Unit
+    ) {
+        splashAdController.showSplashAd(
+            enableKey = true.toConfigString(),
+            adType = SplashAdType.AdmobInter("Splash"),
+            activity = this,
+            lifecycle = lifecycle,
+            callBack = object : FullScreenAdsShowListener {
+                override fun onAdDismiss(adKey: String, adShown: Boolean, rewardEarned: Boolean) {
+                    super.onAdDismiss(adKey, adShown, rewardEarned)
+                    Toast.makeText(this@MainActivity, "Did it=$adShown", Toast.LENGTH_SHORT).show()
+                    onAdDismiss.invoke(adShown)
+                }
+            },
+            timeInMillis = 10_000
+        )
 
     }
 
@@ -164,23 +183,4 @@ class MainActivity : ComponentActivity() {
         )
     }
 
-    private fun showSplashAd(
-        onAdDismiss: (Boolean) -> Unit
-    ) {
-        splashAdController.showSplashAd(
-            enableKey = true.toConfigString(),
-            adType = SplashAdType.AdmobInter("Splash"),
-            activity = this,
-            lifecycle = lifecycle,
-            callBack = object : FullScreenAdsShowListener {
-                override fun onAdDismiss(adKey: String, adShown: Boolean, rewardEarned: Boolean) {
-                    super.onAdDismiss(adKey, adShown, rewardEarned)
-                    Toast.makeText(this@MainActivity, "Did it=$adShown", Toast.LENGTH_SHORT).show()
-                    onAdDismiss.invoke(adShown)
-                }
-            },
-            timeInMillis = 15_000
-        )
-
-    }
 }

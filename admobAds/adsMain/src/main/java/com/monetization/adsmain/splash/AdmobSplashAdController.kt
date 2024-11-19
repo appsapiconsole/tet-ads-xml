@@ -39,6 +39,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
     private var interstitialAd: AdmobInterstitialAd? = null
     private var appOpenAd: AdmobAppOpenAd? = null
     private var showLoadingDialog: (() -> Unit)? = null
+    private var loadingListener: AdsLoadingStatusListener? = null
 
     fun reset() {
         enabled = false
@@ -51,6 +52,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
         runnableSplash = null
         splashAdTime = 8_000L
         mLifecycle = null
+        loadingListener = null
         splashNormalLoadingTime = 1_000L
         activity = null
         try {
@@ -67,12 +69,14 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
         timeInMillis: Long,
         callBack: FullScreenAdsShowListener,
         lifecycle: Lifecycle,
+        loadingListener: AdsLoadingStatusListener? = null,
         normalLoadingTime: Long = 1_000,
         bestShowRatesEnabled: Boolean = false,
         normalLoadingDialog: (() -> Unit)? = null
     ) {
         val enable = enableKey.isRemoteAdEnabled(adType.getAdKey(), AdType.INTERSTITIAL)
         this.listener = callBack
+        this.loadingListener = loadingListener
         this.activity = activity
         this.splashAdType = adType
         this.isAdShowing = false
@@ -103,12 +107,18 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
         logAds("startLoadingAds Called For Splash")
         startHandler(splashAdTime)
         val loadingStateListener = object : AdsLoadingStatusListener {
+            override fun onAdRequested(adKey: String) {
+                super.onAdRequested(adKey)
+                loadingListener?.onAdRequested(adKey)
+            }
+
             override fun onAdLoaded(adKey: String) {
                 splashAdLoaded = true
                 logAds("Splash Ad onAdLoaded ,Handler Running=$isHandlerRunning")
-                if (isScreenInPause.not()) {
+                if (isScreenInPause.not() && listener != null) {
                     removeCallBacks()
                     isAdShowing = true
+                    loadingListener?.onAdLoaded(adKey = adKey)
                     listener?.onAdLoaded(adKey = adKey)
                     if (splashNormalLoadingTime > 0) {
                         showLoadingDialog?.invoke()
@@ -130,6 +140,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                     "Splash Ad onAdFailedToLoad,message=$message ,Handler Running=$isHandlerRunning",
                     true
                 )
+                loadingListener?.onAdFailedToLoad(adKey, message, code)
                 splashAdFailed = true
                 if (isHandlerRunning) {
                     onAdDismissed(adKey)
@@ -208,22 +219,26 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
             callback.onAdFailedToLoad(adKey, "No Controller for app open splash")
             return
         }
-        val listener =
-            object : AdsLoadingStatusListener {
-                override fun onAdLoaded(adKey: String) {
-                    appOpenAd = adController.getAvailableAd() as? AdmobAppOpenAd
-                    if (appOpenAd != null) {
-                        callback.onAdLoaded(adKey)
-                    } else {
-                        callback.onAdFailedToLoad(adKey, "onAdLoaded appOpenAd =null")
-                    }
-                }
+        val listener = object : AdsLoadingStatusListener {
+            override fun onAdRequested(adKey: String) {
+                super.onAdRequested(adKey)
+                callback.onAdRequested(adKey)
+            }
 
-                override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
-                    appOpenAd = null
-                    callback.onAdFailedToLoad(message)
+            override fun onAdLoaded(adKey: String) {
+                appOpenAd = adController.getAvailableAd() as? AdmobAppOpenAd
+                if (appOpenAd != null) {
+                    callback.onAdLoaded(adKey)
+                } else {
+                    callback.onAdFailedToLoad(adKey, "onAdLoaded appOpenAd =null")
                 }
             }
+
+            override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
+                appOpenAd = null
+                callback.onAdFailedToLoad(message)
+            }
+        }
         adController.loadAd(
             placementKey = adEnabledSdkString,
             activity = activity,
@@ -245,6 +260,10 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
             return
         }
         val listener = object : AdsLoadingStatusListener {
+            override fun onAdRequested(adKey: String) {
+                callback.onAdRequested(adKey)
+            }
+
             override fun onAdLoaded(adKey: String) {
                 interstitialAd = adController.getAvailableAd() as? AdmobInterstitialAd
                 if (interstitialAd != null) {
@@ -270,6 +289,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
     private fun onAdDismissed(key: String, adShown: Boolean = false) {
         logAds("Splash Ad onAdDismissed Called = $key")
         listener?.onAdDismiss(key, adShown)
+        loadingListener = null
         isHandlerRunning = false
         mLifecycle?.removeObserver(this)
         listener = null
@@ -298,6 +318,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
         if (isAdShowing) {
             return
         }
+        listener?.splashAdOnPause()
         logAds("Splash Ad On Pause", true)
         isScreenInPause = true
         removeCallBacks()
@@ -311,6 +332,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
             true
         )
         if (isScreenInPause) {
+            listener?.splashAdOnResume()
             isScreenInPause = false
             if (!isHandlerRunning) {
                 handlerAd.postDelayed({

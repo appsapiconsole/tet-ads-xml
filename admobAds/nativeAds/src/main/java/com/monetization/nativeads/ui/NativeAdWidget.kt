@@ -114,12 +114,6 @@ class NativeAdWidget @JvmOverloads constructor(
 
     override fun populateAd() {
         layoutView?.let {
-            /*it.inflateLayoutByLayoutInfo(activity!!)?.let {
-                it.parent?.let { parent ->
-                    (parent as ViewGroup).removeView(it)
-                }
-                addView(it)
-            }*/
             showNativeAd(view = it, onShown = {
                 if (oneTimeUse) {
                     adsController?.destroyAd(activity!!)
@@ -132,6 +126,7 @@ class NativeAdWidget @JvmOverloads constructor(
                         )
                     }
                 }
+                uiListener?.onAdPopulated(key)
             })
         }
     }

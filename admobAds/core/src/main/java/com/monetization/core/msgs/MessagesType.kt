@@ -11,4 +11,5 @@ enum class MessagesType {
     AdLoadedButNoListeners,
     InstantTimeEnd,
     CounterNotReached,
+    CounterNotRegistered,
 }

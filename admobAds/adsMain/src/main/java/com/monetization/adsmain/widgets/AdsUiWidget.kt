@@ -134,7 +134,6 @@ class AdsUiWidget @JvmOverloads constructor(
     fun showBannerAdmob(
         activity: Activity,
         adKey: String,
-        bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
         shimmerInfo: ShimmerInfo = ShimmerInfo.GivenLayout(),
         oneTimeUse: Boolean = true,
         requestNewOnShow: Boolean = true,
@@ -150,7 +149,6 @@ class AdsUiWidget @JvmOverloads constructor(
             bannerWidget.showBannerAdmob(
                 activity = activity,
                 adKey = adKey,
-                bannerAdType = bannerAdType,
                 enabled = adEnabled,
                 shimmerInfo = shimmerInfo,
                 oneTimeUse = oneTimeUse,

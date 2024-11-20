@@ -88,7 +88,6 @@ fun AdsUiWidget.sdkBannerAd(
     placementKey: String,
     lifecycle: Lifecycle,
     activity: Activity,
-    type: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
     showShimmerLayout: ShimmerInfo = ShimmerInfo.GivenLayout(),
     requestNewOnShow: Boolean = false,
     showNewAdEveryTime: Boolean = true,
@@ -96,27 +95,22 @@ fun AdsUiWidget.sdkBannerAd(
     defaultEnable: Boolean = true,
     listener: UiAdsListener? = null
 ) {
-    if (activity == null) {
-        "Pass Activity When Calling sdkBannerAd".errorLogging()
-    } else {
-        apply {
-            attachWithLifecycle(lifecycle = lifecycle, forBanner = true, isJetpackCompose = false)
-            setWidgetKey(
-                placementKey = placementKey, adKey = adKey,
-                model = null,
-                defEnabled = defaultEnable,
-                isNativeAd = false
-            )
-            showBannerAdmob(
-                activity = activity,
-                bannerAdType = type,
-                adKey = adKey,
-                shimmerInfo = showShimmerLayout,
-                oneTimeUse = showNewAdEveryTime,
-                requestNewOnShow = requestNewOnShow,
-                listener = listener,
-                showOnlyIfAdAvailable = showOnlyIfAdAvailable
-            )
-        }
+    apply {
+        attachWithLifecycle(lifecycle = lifecycle, forBanner = true, isJetpackCompose = false)
+        setWidgetKey(
+            placementKey = placementKey, adKey = adKey,
+            model = null,
+            defEnabled = defaultEnable,
+            isNativeAd = false
+        )
+        showBannerAdmob(
+            activity = activity,
+            adKey = adKey,
+            shimmerInfo = showShimmerLayout,
+            oneTimeUse = showNewAdEveryTime,
+            requestNewOnShow = requestNewOnShow,
+            listener = listener,
+            showOnlyIfAdAvailable = showOnlyIfAdAvailable
+        )
     }
 }

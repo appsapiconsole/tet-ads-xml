@@ -145,7 +145,6 @@ class MainActivity : ComponentActivity() {
 
     private fun showBannerAd() {
         binding.adFrame.sdkBannerAd(activity = this,
-            type = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
             adKey = "Banner",
             placementKey = true.toConfigString(),
             showNewAdEveryTime = true,

@@ -17,17 +17,25 @@ import com.monetization.core.managers.AdsLoadingStatusListener
 class AdmobBannerAdsController(
     adKey: String,
     adIdsList: List<String>,
+    private val bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
     listener: ControllersListener? = null
-) : AdsControllerBaseHelper(adKey, AdType.BANNER, adIdsList, listener) {
+) : AdsControllerBaseHelper(
+    adKey = adKey,
+    adType = AdType.BANNER,
+    adIdsList = adIdsList,
+    listener = listener
+) {
 
     private var currentBannerAd: AdmobBannerAd? = null
 
-    fun loadBannerAd(
+
+    fun getBannerAdType() = bannerAdType
+
+    override fun loadAd(
         placementKey: String,
         activity: Activity,
         calledFrom: String,
-        callback: AdsLoadingStatusListener?,
-        bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
+        callback: AdsLoadingStatusListener?
     ) {
         val commonLoadChecks = commonLoadAdChecks(placementKey = placementKey, callback = callback)
         if (commonLoadChecks.not()) {
@@ -95,15 +103,6 @@ class AdmobBannerAdsController(
         }
         adView.loadAd(adRequest)
         onAdRequested()
-    }
-
-    override fun loadAd(
-        placementKey: String,
-        activity: Activity,
-        calledFrom: String,
-        callback: AdsLoadingStatusListener?
-    ) {
-        throw IllegalArgumentException("Please Call loadBannerAd function")
     }
 
     override fun destroyAd(activity: Activity?) {

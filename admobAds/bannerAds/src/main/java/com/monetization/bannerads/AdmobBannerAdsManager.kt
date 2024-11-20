@@ -6,7 +6,12 @@ import com.monetization.core.commons.TestAds
 
 object AdmobBannerAdsManager : AdmobBaseAdsManager<AdmobBannerAdsController>(AdType.NATIVE) {
     init {
-        addNewController(AdmobBannerAdsController("Test", listOf(TestAds.TestBannerId)))
+        addNewController(
+            AdmobBannerAdsController(
+                adKey = "Test",
+                adIdsList = listOf(TestAds.TestBannerId)
+            )
+        )
     }
 }
 

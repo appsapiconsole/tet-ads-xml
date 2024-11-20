@@ -30,22 +30,19 @@ class BannerAdWidget @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : BaseAdsWidget<AdmobBannerAdsController>(context, attrs, defStyleAttr) {
 
-    private var bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner)
+//    private var bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner)
 
     private var bannerRefreshed = false
 
     fun showBannerAdmob(
         activity: Activity,
         adKey: String,
-        bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
         enabled: Boolean,
         shimmerInfo: ShimmerInfo = ShimmerInfo.GivenLayout(),
         oneTimeUse: Boolean = true,
         requestNewOnShow: Boolean = true,
         listener: UiAdsListener?
     ) {
-        this.bannerAdType = bannerAdType
-
         onShowAdCalled(
             adKey = adKey,
             activity = activity,
@@ -57,13 +54,12 @@ class BannerAdWidget @JvmOverloads constructor(
             adType = AdType.BANNER,
             listener = listener
         )
-        logAds("showBannerAd called($key)=$bannerAdType,enable=$enabled,")
+        logAds("showBannerAd called($key),enable=$enabled,")
     }
 
     override fun loadAd() {
-        (adsController as? AdmobBannerAdsController)?.loadBannerAd(
+        (adsController as? AdmobBannerAdsController)?.loadAd(
             activity = activity!!,
-            bannerAdType = bannerAdType,
             calledFrom = "Base Banner Activity",
             placementKey = adEnabledSdkString,
             callback = object : AdsLoadingStatusListener {
@@ -105,11 +101,10 @@ class BannerAdWidget @JvmOverloads constructor(
                         return@populateAd
                     }
                     if (requestNewOnShow) {
-                        (adsController as AdmobBannerAdsController).loadBannerAd(
+                        (adsController as AdmobBannerAdsController).loadAd(
                             activity = activity!!,
                             calledFrom = "",
                             callback = null,
-                            bannerAdType = bannerAdType,
                             placementKey = adEnabledSdkString
                         )
                     }
@@ -140,6 +135,7 @@ class BannerAdWidget @JvmOverloads constructor(
                 ?.findViewById<ShimmerFrameLayout>(com.monetization.core.R.id.shimmerRoot)
             val shimmerView = when (info) {
                 is ShimmerInfo.GivenLayout -> {
+                    val bannerAdType = AdmobBannerAdsManager.getAdController(key)?.getBannerAdType()
                     val layoutForShimmer = when (bannerAdType) {
                         is BannerAdType.Collapsible -> {
                             "adapter_banner_shimmer"
@@ -150,7 +146,12 @@ class BannerAdWidget @JvmOverloads constructor(
                                 BannerAdSize.AdaptiveBanner -> "adapter_banner_shimmer"
                                 BannerAdSize.MediumRectangle -> "rectangular_banner_shimmer"
                                 BannerAdSize.Banner -> "adapter_banner_shimmer"
+                                BannerAdSize.LargeBanner -> "large_banner_shimmer"
                             }
+                        }
+
+                        null -> {
+                            "adapter_banner_shimmer"
                         }
                     }
                     val adLayout = layoutForShimmer.inflateLayoutByName(activity!!)

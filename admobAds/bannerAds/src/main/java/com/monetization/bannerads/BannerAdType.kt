@@ -25,8 +25,13 @@ fun BannerAdType.getBannerSize(activity: Activity): AdSize? {
                 BannerAdSize.Banner -> {
                     AdSize.BANNER
                 }
+
                 BannerAdSize.AdaptiveBanner -> {
                     getAdSize(activity)
+                }
+
+                BannerAdSize.LargeBanner -> {
+                    AdSize.LARGE_BANNER
                 }
             }
         }

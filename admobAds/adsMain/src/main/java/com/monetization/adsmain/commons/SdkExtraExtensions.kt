@@ -9,6 +9,8 @@ import com.monetization.appopen.AdmobAppOpenAdsController
 import com.monetization.appopen.AdmobAppOpenAdsManager
 import com.monetization.bannerads.AdmobBannerAdsController
 import com.monetization.bannerads.AdmobBannerAdsManager
+import com.monetization.bannerads.BannerAdSize
+import com.monetization.bannerads.BannerAdType
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.adEnabledSdkString
 import com.monetization.core.commons.AdsCommons.logAds
@@ -99,7 +101,11 @@ fun AdmobInterstitialAdsManager.addNewController(
 }
 
 fun addNewController(
-    adType: AdType, adKey: String, adIdsList: List<String>, listener: ControllersListener? = null
+    adType: AdType,
+    adKey: String,
+    adIdsList: List<String>,
+    bannerAdType: BannerAdType? = null,
+    listener: ControllersListener? = null
 ) {
     when (adType) {
         AdType.NATIVE -> AdmobNativeAdsManager.addNewController(adKey, adIdsList, listener)
@@ -112,7 +118,17 @@ fun addNewController(
             adKey, adIdsList, listener
         )
 
-        AdType.BANNER -> AdmobBannerAdsManager.addNewController(adKey, adIdsList, listener)
+        AdType.BANNER -> {
+            bannerAdType?.let {
+                AdmobBannerAdsManager.addNewController(
+                    adKey = adKey, adIdsList = adIdsList,
+                    bannerAdType = it, listener = listener
+                )
+            } ?: run {
+                throw IllegalArgumentException("Banner Ad Type Cannot Be Null For Key $adKey")
+            }
+        }
+
         AdType.AppOpen -> AdmobAppOpenAdsManager.addNewController(adKey, adIdsList, listener)
     }
 }
@@ -125,9 +141,19 @@ fun AdmobNativeAdsManager.addNewController(
 
 
 fun AdmobBannerAdsManager.addNewController(
-    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null
+    adKey: String,
+    adIdsList: List<String>,
+    bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
+    listener: ControllersListener? = null
 ) {
-    addNewController(AdmobBannerAdsController(adKey, adIdsList, listener))
+    addNewController(
+        controller = AdmobBannerAdsController(
+            adKey = adKey,
+            adIdsList = adIdsList,
+            bannerAdType = bannerAdType,
+            listener = listener
+        )
+    )
 }
 
 fun AdmobAppOpenAdsManager.addNewController(

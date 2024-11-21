@@ -24,7 +24,32 @@ object AdmobAppOpenAdsManager : AdmobBaseAdsManager<AdmobAppOpenAdsController>(A
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
-        listener?.onShowAd()
+        listener?.onAppStart()
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
+        listener?.onAppStop()
+    }
+
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
+        listener?.onAppCreate()
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        super.onDestroy(owner)
+        listener?.onAppDestroy()
+    }
+
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+        listener?.onAppPause()
+    }
+
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+        listener?.onAppResume()
     }
 
 }

@@ -6,13 +6,35 @@ import com.monetization.appopen.AppOpenListener
 object AdmobAppOpenAdsHelper {
     fun initOpensAds(
         onShowAppOpenAd: () -> Unit,
-        canShowAppOpenAd: () -> Boolean
+        canShowAppOpenAd: () -> Boolean,
+        listener: AppOpenListener? = null
     ) {
         AdmobAppOpenAdsManager.initAppOpen(object : AppOpenListener {
-            override fun onShowAd() {
+            override fun onAppStart() {
                 if (canShowAppOpenAd.invoke()) {
                     onShowAppOpenAd.invoke()
                 }
+                listener?.onAppStart()
+            }
+
+            override fun onAppCreate() {
+                listener?.onAppCreate()
+            }
+
+            override fun onAppStop() {
+                listener?.onAppStop()
+            }
+
+            override fun onAppResume() {
+                listener?.onAppResume()
+            }
+
+            override fun onAppDestroy() {
+                listener?.onAppDestroy()
+            }
+
+            override fun onAppStopped() {
+
             }
         })
     }

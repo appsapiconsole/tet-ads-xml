@@ -110,6 +110,7 @@ class AdsUiWidget @JvmOverloads constructor(
         listener: UiAdsListener? = null
     ) {
         if (showOnlyIfAdAvailable && adKey.isAdAvailable(AdType.NATIVE).not()) {
+            logAds("Because No Ad Is Available Against key=$adKey", true)
             listener?.onAdFailed(adKey, msg = "Because No Ad Is Available Against key=$adKey", -1)
             return
         }

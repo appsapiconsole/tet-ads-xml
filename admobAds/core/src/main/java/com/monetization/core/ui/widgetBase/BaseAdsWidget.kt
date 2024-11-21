@@ -208,8 +208,9 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         isLoadAdCalled = true
         adsController = adsManager.getAdController(key)
         if (adsController == null) {
-            logAds("Controller for $key, is not available", true)
             makeGone()
+            logAds("Controller for $key, is not available", true)
+            uiListener?.onAdFailed(key, "Controller for $key, is not available", -1)
             return
         }
         if (adLoaded && adUnit != null) {
@@ -218,6 +219,8 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         }
         if (isAdEnabled.not()) {
             makeGone()
+            logAds("Ad Is Not Enabled From Firebase")
+            uiListener?.onAdFailed(key, "Ad Is Not Enabled From Firebase", -1)
             return
         }
         makeVisible()

@@ -70,7 +70,7 @@ dependencies {
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
-    implementation("com.github.developwithishfaq:remote-config:0.0.2")
+    implementation("com.github.appsapiconsole:remote-config:0.0.2")
 
     implementation(project(":admobAds:core"))
     implementation(project(":admobAds:adsMain"))

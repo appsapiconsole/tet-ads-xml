@@ -53,9 +53,9 @@ afterEvaluate {
             // Creates a Maven publication called "release".
             create<MavenPublication>("release") {
                 from(components["release"])
-                groupId = "com.github.developwithishfaq"
+                groupId = "com.github.appsapiconsole"
                 artifactId = "corree"
-                version = "2.1.5"
+                version = "2.1.6"
 
             }
         }

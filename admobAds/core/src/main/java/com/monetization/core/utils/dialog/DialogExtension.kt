@@ -8,7 +8,7 @@ import com.monetization.core.listeners.SdkDialogsListener
 
 fun SdkDialogs.onAdLoadingDialogStateChange(
     showDialog: Boolean,
-    isForBlackBg: Boolean
+    isForBlackBg: Boolean,
 ) {
     if (showDialog) {
         if (isForBlackBg) {

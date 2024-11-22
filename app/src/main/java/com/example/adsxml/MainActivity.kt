@@ -25,14 +25,11 @@ import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.core.msgs.MessagesType
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
-import com.monetization.core.utils.dialog.SdkDialogs
-import com.monetization.core.utils.dialog.showNormalLoadingDialog
 import com.monetization.interstitials.AdmobInterstitialAdsManager
 import com.monetization.interstitials.extensions.InstantInterstitialAdsManager
-import com.monetization.interstitials.extensions.counter.InstantCounterInterAdsManager
 import com.remote.firebaseconfigs.RemoteCommons.toConfigString
-import com.remote.firebaseconfigs.SdkConfigListener
 import com.remote.firebaseconfigs.SdkRemoteConfigController
+import com.remote.firebaseconfigs.listeners.SdkConfigListener
 import org.koin.android.ext.android.inject
 
 private var TestEnabled = false
@@ -171,10 +168,6 @@ class MainActivity : ComponentActivity() {
 
                 override fun onSuccess() {
                     done.invoke(true)
-                }
-
-                override fun onUpdate() {
-
                 }
             },
             fetchOutTimeInSeconds = 8L,

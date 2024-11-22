@@ -33,6 +33,10 @@ object AdmobAppOpenAdsHelper {
                 listener?.onAppDestroy()
             }
 
+            override fun onAppPause() {
+
+            }
+
             override fun onAppStopped() {
 
             }

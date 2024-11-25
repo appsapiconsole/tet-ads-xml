@@ -5,12 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
 abstract class IshfaqActivity : AppCompatActivity() {
-    lateinit var mContext: Activity
-    /*
 
-        val interAdsManager: IshfaqInterstitialAdsManager by inject()
-        val ishfaqBannerAdsManager: IshfaqBannerAdsManager by inject()
-    */
+    lateinit var mContext: Activity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

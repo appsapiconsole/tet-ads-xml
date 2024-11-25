@@ -86,7 +86,7 @@ object FullScreenAdsShowManager {
 
             AdType.REWARDED -> {
                 if (isInstantAd) {
-                    InstantCounterInterAdsManager.showInstantInterstitialAd(
+                    InstantCounterRewardedAdsManager.showInstantRewardedAd(
                         placementKey = placementKey,
                         activity = activity,
                         key = key,
@@ -106,10 +106,13 @@ object FullScreenAdsShowManager {
                             )
                         },
                         onAdDismiss = onAdDismiss,
-                        onCounterUpdate = onCounterUpdate
+                        onCounterUpdate = onCounterUpdate,
+                        onRewarded = {
+                            onRewarded?.invoke(it)
+                        }
                     )
                 } else {
-                    PreloadCounterInterAdsManager.tryShowingInterstitialAd(
+                    PreloadCounterRewInterManager.tryShowingRewardedInterAd(
                         placementKey = placementKey,
                         key = key,
                         counterKey = counterKey,
@@ -129,7 +132,10 @@ object FullScreenAdsShowManager {
                             )
                         },
                         onAdDismiss = onAdDismiss,
-                        onCounterUpdate = onCounterUpdate
+                        onCounterUpdate = onCounterUpdate,
+                        onRewarded = {
+                            onRewarded?.invoke(it)
+                        }
                     )
                 }
             }

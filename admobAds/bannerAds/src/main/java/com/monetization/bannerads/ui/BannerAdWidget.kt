@@ -30,8 +30,6 @@ class BannerAdWidget @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : BaseAdsWidget<AdmobBannerAdsController>(context, attrs, defStyleAttr) {
 
-//    private var bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner)
-
     private var bannerRefreshed = false
 
     fun showBannerAdmob(
@@ -68,11 +66,11 @@ class BannerAdWidget @JvmOverloads constructor(
                 }
 
                 override fun onAdLoaded(adKey: String) {
-                    uiListener?.onAdLoaded(adKey)
                     if (adLoaded) {
                         bannerRefreshed = true
                     }
                     adOnLoaded()
+                    uiListener?.onAdLoaded(adKey)
                 }
 
                 override fun onImpression(adKey: String) {
@@ -84,8 +82,8 @@ class BannerAdWidget @JvmOverloads constructor(
                 }
 
                 override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
-                    uiListener?.onAdFailed(adKey, message, code)
                     adOnFailed()
+                    uiListener?.onAdFailed(adKey, message, code)
                 }
             }
         )

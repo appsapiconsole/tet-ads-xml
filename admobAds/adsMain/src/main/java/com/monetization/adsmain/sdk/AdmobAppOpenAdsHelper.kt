@@ -1,15 +1,15 @@
 package com.monetization.adsmain.sdk
 
 import com.monetization.appopen.AdmobAppOpenAdsManager
-import com.monetization.appopen.AppOpenListener
+import com.monetization.appopen.AppOpenAndLifecycleListener
 
 object AdmobAppOpenAdsHelper {
     fun initOpensAds(
         onShowAppOpenAd: () -> Unit,
         canShowAppOpenAd: () -> Boolean,
-        listener: AppOpenListener? = null
+        listener: AppOpenAndLifecycleListener? = null
     ) {
-        AdmobAppOpenAdsManager.initAppOpen(object : AppOpenListener {
+        AdmobAppOpenAdsManager.initAppOpen(object : AppOpenAndLifecycleListener {
             override fun onAppStart() {
                 if (canShowAppOpenAd.invoke()) {
                     onShowAppOpenAd.invoke()

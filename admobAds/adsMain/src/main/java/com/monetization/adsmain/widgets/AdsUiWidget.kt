@@ -127,7 +127,8 @@ class AdsUiWidget @JvmOverloads constructor(
                 listener = listener,
                 showFromHistory = showFromHistory
             )
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            logAds("Exception When Calling showNativeAdmob ${e.message}")
         }
     }
 
@@ -156,8 +157,8 @@ class AdsUiWidget @JvmOverloads constructor(
                 requestNewOnShow = requestNewOnShow,
                 listener = listener
             )
-        } catch (_: Exception) {
-
+        } catch (e: Exception) {
+            logAds("Exception When Calling showBannerAdmob ${e.message}")
         }
     }
 

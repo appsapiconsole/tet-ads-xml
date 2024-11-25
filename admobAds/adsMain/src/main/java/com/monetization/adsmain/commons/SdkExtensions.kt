@@ -13,6 +13,8 @@ import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
 
 
+
+
 fun AdsUiWidget.sdkNativeAdd(
     adLayout: LayoutInfo,
     adKey: String,

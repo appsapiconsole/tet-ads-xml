@@ -1,6 +1,6 @@
 package com.monetization.appopen
 
-interface AppOpenListener {
+interface AppOpenAndLifecycleListener {
     fun onAppStart()
     fun onAppCreate()
     fun onAppStop()

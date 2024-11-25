@@ -15,9 +15,9 @@ object AdmobAppOpenAdsManager : AdmobBaseAdsManager<AdmobAppOpenAdsController>(A
     }
 
 
-    private var listener: AppOpenListener? = null
+    private var listener: AppOpenAndLifecycleListener? = null
 
-    fun initAppOpen(callBack: AppOpenListener) {
+    fun initAppOpen(callBack: AppOpenAndLifecycleListener) {
         listener = callBack
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }

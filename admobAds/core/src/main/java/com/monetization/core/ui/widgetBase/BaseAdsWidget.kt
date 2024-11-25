@@ -122,24 +122,20 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
             }
 
             override fun onAdLoaded(adKey: String) {
-                uiListener?.onAdLoaded(adKey)
                 if (adLoaded) {
                     return
                 }
                 adOnLoaded()
+                uiListener?.onAdLoaded(adKey)
             }
 
             override fun onImpression(adKey: String) {
-
                 uiListener?.onImpression(adKey)
-
             }
 
             override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
-
-                uiListener?.onAdFailed(adKey, message, code)
                 adOnFailed()
-
+                uiListener?.onAdFailed(adKey, message, code)
             }
         }
     }

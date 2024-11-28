@@ -44,6 +44,19 @@ class AdsUiWidget @JvmOverloads constructor(
     fun getNativeWidget() = nativeWidget
     fun getBannerWidget() = bannerWidget
 
+    fun setLifecycle(lifecycle: Lifecycle, isNativeAd: Boolean) {
+        if (isNativeAd) {
+            nativeWidget.attachLifecycle(lifecycle)
+        } else {
+            bannerWidget.attachLifecycle(lifecycle)
+        }
+    }
+
+    fun removeLifecycle() {
+        nativeWidget.removeLifecycle()
+        bannerWidget.removeLifecycle()
+    }
+
     fun isAdPopulated(forNative: Boolean): Boolean {
         return if (forNative) {
             nativeWidget.adPopulated()

@@ -67,7 +67,22 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
     fun attachWithLifecycle(lifecycle: Lifecycle, isJetpackCompose: Boolean) {
         this.lifecycle = lifecycle
         if (isJetpackCompose.not()) {
-            this.lifecycle?.addObserver(this)
+            attachLifecycle(lifecycle)
+        }
+    }
+
+    fun attachLifecycle(lifecycle: Lifecycle) {
+        this.lifecycle = lifecycle
+        try {
+            lifecycle.addObserver(this)
+        } catch (_: Exception) {
+        }
+    }
+
+    fun removeLifecycle() {
+        try {
+            lifecycle?.removeObserver(this)
+        } catch (_: Exception) {
         }
     }
 
@@ -251,10 +266,10 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         logAds("setInPause($key)=$check")
         isViewInPause = check
         if (isViewInPause.not()) {
-            lifecycle?.addObserver(this)
+            lifecycle?.let { attachLifecycle(it) }
             adOnResume()
         } else {
-            lifecycle?.removeObserver(this)
+            removeLifecycle()
             addOnPause()
         }
     }

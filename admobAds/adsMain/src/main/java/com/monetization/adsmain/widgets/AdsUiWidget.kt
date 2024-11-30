@@ -8,8 +8,6 @@ import android.widget.FrameLayout
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import com.monetization.adsmain.commons.isAdAvailable
-import com.monetization.bannerads.BannerAdSize
-import com.monetization.bannerads.BannerAdType
 import com.monetization.bannerads.ui.BannerAdWidget
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.logAds
@@ -37,7 +35,7 @@ class AdsUiWidget @JvmOverloads constructor(
     private var bannerWidget: BannerAdWidget =
         BannerAdWidget(context, attrs, defStyleAttr)
 
-    private var widgetKey: String? = null
+    private var placementKey: String? = null
     private var adEnabled: Boolean = false
     private var adsWidgetDataModel: AdsWidgetData? = null
 
@@ -72,8 +70,8 @@ class AdsUiWidget @JvmOverloads constructor(
         model: AdsWidgetData?,
         defEnabled: Boolean = true
     ) {
-        this.widgetKey = placementKey
-        if (widgetKey == null || widgetKey?.isEmpty() == true) {
+        this.placementKey = placementKey
+        if (this.placementKey == null || this.placementKey?.isEmpty() == true) {
             throw IllegalArgumentException("Please Pass Placement Key")
         }
 

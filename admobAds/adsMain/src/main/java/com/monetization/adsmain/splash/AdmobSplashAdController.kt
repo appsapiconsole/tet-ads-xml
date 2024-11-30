@@ -142,7 +142,7 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 )
                 loadingListener?.onAdFailedToLoad(adKey, message, code)
                 splashAdFailed = true
-                if (isHandlerRunning) {
+                if (isScreenInPause.not() && listener != null) {
                     onAdDismissed(adKey)
                 }
             }

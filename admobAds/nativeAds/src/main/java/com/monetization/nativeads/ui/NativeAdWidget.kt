@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.monetization.core.ad_units.core.AdType
-import com.monetization.core.commons.AdsCommons.adEnabledSdkString
 import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.commons.NativeConstants.inflateLayoutByLayoutInfo
 import com.monetization.core.commons.NativeConstants.removeViewsFromIt
@@ -23,7 +22,6 @@ import com.monetization.nativeads.AdmobNativeAd
 import com.monetization.nativeads.AdmobNativeAdsController
 import com.monetization.nativeads.AdmobNativeAdsManager
 import com.monetization.nativeads.R
-import kotlinx.coroutines.launch
 
 class NativeAdWidget @JvmOverloads constructor(
     private val context: Context,
@@ -79,7 +77,7 @@ class NativeAdWidget @JvmOverloads constructor(
             listener.onAdLoaded(key)
         } else {
             (adsController as? AdmobNativeAdsController)?.loadAd(
-                placementKey = adEnabledSdkString,
+                placementKey = placementKey,
                 activity = (activity!!),
                 calledFrom = "Base Native Activity",
                 callback = listener
@@ -119,7 +117,7 @@ class NativeAdWidget @JvmOverloads constructor(
                     adsController?.destroyAd(activity!!)
                     if (requestNewOnShow) {
                         adsController?.loadAd(
-                            placementKey = adEnabledSdkString,
+                            placementKey = placementKey,
                             activity = activity!!,
                             calledFrom = "requestNewOnShow",
                             callback = null

@@ -189,6 +189,7 @@ fun AdType.getAdController(key: String): AdsController? {
     return manager.getAdController(key)
 }
 
+
 fun AdType.getAllControllers(): List<AdsController> {
     return when (this) {
         AdType.NATIVE -> AdmobNativeAdsManager.getAllController()

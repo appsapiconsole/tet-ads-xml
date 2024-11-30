@@ -1,13 +1,11 @@
 package com.monetization.core.counters
 
 import android.util.Log
-import com.monetization.core.counters.CounterManager.decrementCounter
 import com.monetization.core.msgs.MessagesType
 
 object CounterManager {
 
     private val counters = HashMap<String, CounterInfo>()
-    private var safeMode = false
 
     fun createACounter(key: String, info: CounterInfo) {
         counters[key] = info
@@ -82,13 +80,10 @@ object CounterManager {
         }
     }
 
-    fun setSafeMode(check: Boolean = true) {
-        safeMode = check
-    }
-
     fun String.isCounterReached(): Boolean {
         return getCounterModel()?.isCounterReached() == true
     }
+
 
     fun String.incrementCounter() {
         getCounterModel()?.let { model ->
@@ -107,20 +102,25 @@ object CounterManager {
     }
 
     fun String.completeCounter() {
-        getCounterModel()?.let { model ->
-            counters[this] = model.copy(
-                currentPoint = model.maxPoint
-            )
+        if (isCounterRegistered()) {
+            getCounterModel()?.let { model ->
+                counters[this] = model.copy(
+                    currentPoint = model.maxPoint
+                )
+            }
         }
     }
 
     fun String.changeMaxCounter(maxCounter: Int) {
-        getCounterModel()?.copy(
-            maxPoint = maxCounter
-        )?.let { model ->
-            counters[this] = model
+        if (isCounterRegistered()) {
+            getCounterModel()?.copy(
+                maxPoint = maxCounter
+            )?.let { model ->
+                counters[this] = model
+            }
         }
     }
+
 
     fun String.changeCurrentCounter(counter: Int) {
         getCounterModel()?.copy(
@@ -131,10 +131,9 @@ object CounterManager {
     }
 
     fun String.getCounterModel(): CounterInfo? {
-        val model = if (safeMode) {
-            counters[this]
-        } else {
-            counters[this] ?: throw IllegalArgumentException("No Counter found against key : $this")
+        val model = counters[this]
+        if (model == null) {
+            logCounterDetails("Please Register Counter Key !!!!", true)
         }
         return model
     }

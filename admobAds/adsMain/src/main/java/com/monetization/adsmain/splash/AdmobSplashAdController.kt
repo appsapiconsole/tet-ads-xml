@@ -112,13 +112,13 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 loadingListener?.onAdRequested(adKey)
             }
 
-            override fun onAdLoaded(adKey: String) {
+            override fun onAdLoaded(adKey: String, mediationClassName: String?) {
                 splashAdLoaded = true
                 logAds("Splash Ad onAdLoaded ,Handler Running=$isHandlerRunning")
                 if (isScreenInPause.not() && listener != null) {
                     removeCallBacks()
                     isAdShowing = true
-                    loadingListener?.onAdLoaded(adKey = adKey)
+                    loadingListener?.onAdLoaded(adKey = adKey, mediationClassName)
                     listener?.onAdLoaded(adKey = adKey)
                     if (splashNormalLoadingTime > 0) {
                         showLoadingDialog?.invoke()
@@ -225,10 +225,10 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 callback.onAdRequested(adKey)
             }
 
-            override fun onAdLoaded(adKey: String) {
+            override fun onAdLoaded(adKey: String, mediationClassName: String?) {
                 appOpenAd = adController.getAvailableAd() as? AdmobAppOpenAd
                 if (appOpenAd != null) {
-                    callback.onAdLoaded(adKey)
+                    callback.onAdLoaded(adKey, mediationClassName)
                 } else {
                     callback.onAdFailedToLoad(adKey, "onAdLoaded appOpenAd =null")
                 }
@@ -264,10 +264,10 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 callback.onAdRequested(adKey)
             }
 
-            override fun onAdLoaded(adKey: String) {
+            override fun onAdLoaded(adKey: String, mediationClassName: String?) {
                 interstitialAd = adController.getAvailableAd() as? AdmobInterstitialAd
                 if (interstitialAd != null) {
-                    callback.onAdLoaded(adKey)
+                    callback.onAdLoaded(adKey, mediationClassName)
                 } else {
                     callback.onAdFailedToLoad(adKey, " onAdLoaded interstitialAd == null")
                 }

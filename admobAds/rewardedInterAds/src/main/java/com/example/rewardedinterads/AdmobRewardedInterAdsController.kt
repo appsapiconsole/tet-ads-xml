@@ -44,7 +44,7 @@ class AdmobRewardedInterAdsController(
                             precisionType = paidListener.precisionType
                         )
                     }
-                    onLoaded()
+                    onLoaded(ad.responseInfo?.mediationAdapterClassName)
                 }
 
                 override fun onAdFailedToLoad(error: LoadAdError) {

@@ -25,6 +25,7 @@ interface AdsController {
     fun setListener(activity: Activity, callback: AdsLoadingStatusListener) {}
     fun destroyAd(activity: Activity?) {}
     fun getAdKey(): String
+    fun getMediationAdapterClassName(): String?
     fun getAdId(): String
     fun getAdType(): AdType
     fun getAdIdsList(): List<String>

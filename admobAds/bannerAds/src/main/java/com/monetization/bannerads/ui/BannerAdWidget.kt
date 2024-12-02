@@ -64,12 +64,12 @@ class BannerAdWidget @JvmOverloads constructor(
                     uiListener?.onAdRequested(adKey)
                 }
 
-                override fun onAdLoaded(adKey: String) {
+                override fun onAdLoaded(adKey: String, mediationClassName: String?) {
                     if (adLoaded) {
                         bannerRefreshed = true
                     }
                     adOnLoaded()
-                    uiListener?.onAdLoaded(adKey)
+                    uiListener?.onAdLoaded(adKey, mediationClassName)
                 }
 
                 override fun onImpression(adKey: String) {

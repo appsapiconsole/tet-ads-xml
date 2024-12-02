@@ -74,7 +74,7 @@ class NativeAdWidget @JvmOverloads constructor(
     override fun loadAd() {
         val listener = getAdsLoadingListener()
         if (showFromHistory && adsController?.getHistory()?.isNotEmpty() == true) {
-            listener.onAdLoaded(key)
+            listener.onAdLoaded(key, adsController?.getMediationAdapterClassName())
         } else {
             (adsController as? AdmobNativeAdsController)?.loadAd(
                 placementKey = placementKey,

@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
@@ -14,7 +13,6 @@ import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.ad_units.core.AdUnit
 import com.monetization.core.commons.AdsCommons.getGoodName
 import com.monetization.core.commons.AdsCommons.logAds
-import com.monetization.core.commons.NativeConstants.inflateLayoutByLayoutInfo
 import com.monetization.core.commons.NativeConstants.makeGone
 import com.monetization.core.commons.NativeConstants.makeVisible
 import com.monetization.core.commons.SdkConfigs
@@ -136,12 +134,12 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
                 uiListener?.onAdClicked(adKey)
             }
 
-            override fun onAdLoaded(adKey: String) {
+            override fun onAdLoaded(adKey: String, mediationClassName: String?) {
                 if (adLoaded) {
                     return
                 }
                 adOnLoaded()
-                uiListener?.onAdLoaded(adKey)
+                uiListener?.onAdLoaded(adKey, mediationClassName)
             }
 
             override fun onImpression(adKey: String) {

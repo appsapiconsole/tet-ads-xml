@@ -24,7 +24,8 @@ interface ControllersListener {
         adKey: String,
         adType: AdType,
         placementKey: String,
-        dataMap: HashMap<String, String>
+        dataMap: HashMap<String, String>,
+        mediationClassName: String?
     ) {
     }
 

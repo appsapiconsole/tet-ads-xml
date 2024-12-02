@@ -51,7 +51,7 @@ class AdmobNativeAdsController(
                 )
             }
             CoroutineScope(Dispatchers.Main).launch {
-                onLoaded()
+                onLoaded(nativeAd.responseInfo?.mediationAdapterClassName)
             }
 
         }.withAdListener(object : com.google.android.gms.ads.AdListener() {

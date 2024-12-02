@@ -163,9 +163,9 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
                 activity = activity,
                 calledFrom = "showInstantAd ad to show null",
                 callback = object : AdsLoadingStatusListener {
-                    override fun onAdLoaded(adKey: String) {
+                    override fun onAdLoaded(adKey: String, mediationClassName: String?) {
                         loadingDialogListener?.invoke(false)
-                        uiAdsListener?.onAdLoaded(adKey)
+                        uiAdsListener?.onAdLoaded(adKey,mediationClassName)
                         val newAd = controller.getAvailableAd()
                         logAds("showInstantAd onAdLoaded, Checks = ${onDismissListener != null && newAd != null && activity.isFinishing.not() && activity.isDestroyed.not()}")
                         if (onDismissListener != null && newAd != null && activity.isFinishing.not() && activity.isDestroyed.not()) {

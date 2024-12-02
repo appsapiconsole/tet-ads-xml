@@ -82,7 +82,7 @@ class AdmobBannerAdsController(
                         precisionType = paidListener.precisionType
                     )
                 }
-                onLoaded()
+                onLoaded(adView.responseInfo?.mediationAdapterClassName)
             }
 
             override fun onAdFailedToLoad(error: LoadAdError) {

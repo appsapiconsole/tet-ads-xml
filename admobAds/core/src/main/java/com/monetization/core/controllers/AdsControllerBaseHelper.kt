@@ -160,18 +160,21 @@ abstract class AdsControllerBaseHelper(
         logAds("$adType Ad Impression,Key=$adKey")
     }
 
-    fun onLoaded() {
+    private var mediationClassName: String? = null
+    fun onLoaded(mediationClassName: String?) {
         canRequestAd = true
+        this.mediationClassName = mediationClassName
         adInfo = adInfo?.copy(
             adFinalTime = Loaded(System.currentTimeMillis())
         )
         addInAdHistory()
-        loadingStateListener?.onAdLoaded(adKey)
+        loadingStateListener?.onAdLoaded(adKey, mediationClassName)
         controllerListener?.onAdLoaded(
             adKey = adKey,
             adType = adType,
             placementKey = placementKey,
-            dataMap = customDataMap
+            dataMap = customDataMap,
+            mediationClassName
         )
         logAds("$adType Ad Loaded,Key=$adKey,id=$latestAdIdRequested")
     }
@@ -236,7 +239,7 @@ abstract class AdsControllerBaseHelper(
             return false
         }
         if (isAdAvailable()) {
-            loadingStateListener?.onAdLoaded(adKey)
+            loadingStateListener?.onAdLoaded(adKey,mediationClassName)
             return false
         }
         if (canLoadAd(placementKey).not()) {
@@ -265,6 +268,10 @@ abstract class AdsControllerBaseHelper(
 
     override fun getAdKey(): String {
         return adKey
+    }
+
+    override fun getMediationAdapterClassName(): String? {
+        return mediationClassName
     }
 
     override fun getAdIdsList(): List<String> {

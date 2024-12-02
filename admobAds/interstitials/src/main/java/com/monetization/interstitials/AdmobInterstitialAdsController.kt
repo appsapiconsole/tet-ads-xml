@@ -48,7 +48,7 @@ class AdmobInterstitialAdsController(
                             precisionType = paidListener.precisionType
                         )
                     }
-                    onLoaded()
+                    onLoaded(interAd.responseInfo?.mediationAdapterClassName)
 
                 }
 

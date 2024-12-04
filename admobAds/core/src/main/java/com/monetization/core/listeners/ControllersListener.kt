@@ -1,5 +1,6 @@
 package com.monetization.core.listeners
 
+import android.os.Bundle
 import com.monetization.core.ad_units.core.AdType
 
 interface ControllersListener {
@@ -16,7 +17,12 @@ interface ControllersListener {
         adType: AdType,
         value: Long,
         currencyCode: String,
-        precisionType: Int
+        precisionType: Int,
+        adSourceName: String?,
+        adSourceId: String?,
+        adSourceInstanceName: String?,
+        adSourceInstanceId: String?,
+        extras: Bundle?
     ) {
     }
 

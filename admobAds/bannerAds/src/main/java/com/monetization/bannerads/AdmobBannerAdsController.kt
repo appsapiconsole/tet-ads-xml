@@ -2,9 +2,7 @@ package com.monetization.bannerads
 
 import android.app.Activity
 import android.os.Bundle
-import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
@@ -13,12 +11,15 @@ import com.monetization.core.ad_units.core.AdUnit
 import com.monetization.core.controllers.AdsControllerBaseHelper
 import com.monetization.core.listeners.ControllersListener
 import com.monetization.core.managers.AdsLoadingStatusListener
+import com.monetization.core.provider.ad_request.AdRequestProvider
+import com.monetization.core.provider.ad_request.DefaultAdRequestProvider
 
 class AdmobBannerAdsController(
     adKey: String,
     adIdsList: List<String>,
     private val bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
-    listener: ControllersListener? = null
+    listener: ControllersListener? = null,
+    private val adRequestProvider: AdRequestProvider = DefaultAdRequestProvider()
 ) : AdsControllerBaseHelper(
     adKey = adKey,
     adType = AdType.BANNER,
@@ -66,9 +67,7 @@ class AdmobBannerAdsController(
         } else {
             adView.setAdSize(adSize)
         }
-        val adRequest = AdRequest.Builder()
-            .addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-            .build()
+        val adRequest = adRequestProvider.getAdRequest()
 
         adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
@@ -76,10 +75,22 @@ class AdmobBannerAdsController(
                 currentBannerAd?.destroyAd(activity)
                 currentBannerAd = AdmobBannerAd(getAdKey(), adView)
                 currentBannerAd?.adView?.setOnPaidEventListener { paidListener ->
+                    val loadedAdapterResponseInfo = adView.responseInfo?.loadedAdapterResponseInfo
+                    val adSourceName: String? = loadedAdapterResponseInfo?.adSourceName
+                    val adSourceId: String? = loadedAdapterResponseInfo?.adSourceId
+                    val adSourceInstanceName: String? =
+                        loadedAdapterResponseInfo?.adSourceInstanceName
+                    val adSourceInstanceId: String? =
+                        loadedAdapterResponseInfo?.adSourceInstanceId
                     onAdRevenue(
                         value = paidListener.valueMicros,
                         currencyCode = paidListener.currencyCode,
-                        precisionType = paidListener.precisionType
+                        precisionType = paidListener.precisionType,
+                        adSourceName = adSourceName,
+                        adSourceId = adSourceId,
+                        adSourceInstanceName = adSourceInstanceName,
+                        adSourceInstanceId = adSourceInstanceId,
+                        extras = adView.responseInfo?.responseExtras
                     )
                 }
                 onLoaded(adView.responseInfo?.mediationAdapterClassName)
@@ -88,7 +99,7 @@ class AdmobBannerAdsController(
             override fun onAdFailedToLoad(error: LoadAdError) {
                 super.onAdFailedToLoad(error)
                 currentBannerAd = null
-                onAdFailed(error.message, error.code)
+                onAdFailed(error)
             }
 
             override fun onAdImpression() {

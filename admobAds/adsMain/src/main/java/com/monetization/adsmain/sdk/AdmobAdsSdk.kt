@@ -21,7 +21,10 @@ class AdmobAdsSdk(
         }
     }
 
-    private fun initAdmobSdk(context: Context, onInitialized: () -> Unit) {
+    private fun initAdmobSdk(
+        context: Context,
+        onInitialized: () -> Unit
+    ) {
         if (isSdkInitialized) {
             return
         }
@@ -32,7 +35,15 @@ class AdmobAdsSdk(
                     onInitialized.invoke()
                 }
             }
-            MobileAds.setAppMuted(true)
+            setAdsMuted(true)
         }
+    }
+
+    fun setAdsMuted(check: Boolean = true) {
+        MobileAds.setAppMuted(check)
+    }
+
+    fun setAppVolume(volume: Float = 0.5f) {
+        MobileAds.setAppVolume(volume)
     }
 }

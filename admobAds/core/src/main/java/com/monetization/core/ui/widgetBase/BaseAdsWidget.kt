@@ -146,9 +146,20 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
                 uiListener?.onImpression(adKey)
             }
 
-            override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
+            override fun onAdFailedToLoad(
+                adKey: String,
+                message: String,
+                code: Int,
+                mediationClassName: String?,
+                adapterResponses: List<AdsControllerBaseHelper.AdapterResponses>?
+            ) {
                 adOnFailed()
-                uiListener?.onAdFailed(adKey, message, code)
+                uiListener?.onAdFailed(
+                    key = adKey,
+                    msg = message,
+                    code = code,
+                    mediationClassName = mediationClassName
+                )
             }
         }
     }
@@ -219,7 +230,12 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         if (adsController == null) {
             makeGone()
             logAds("Controller for $key, is not available", true)
-            uiListener?.onAdFailed(key, "Controller for $key, is not available", -1)
+            uiListener?.onAdFailed(
+                key = key,
+                msg = "Controller for $key, is not available",
+                code = -1,
+                mediationClassName = null
+            )
             return
         }
         if (adLoaded && adUnit != null) {
@@ -229,7 +245,12 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         if (isAdEnabled.not()) {
             makeGone()
             logAds("Ad Is Not Enabled From Firebase")
-            uiListener?.onAdFailed(key, "Ad Is Not Enabled From Firebase", -1)
+            uiListener?.onAdFailed(
+                key = key,
+                msg = "Ad Is Not Enabled From Firebase",
+                code = -1,
+                mediationClassName = null
+            )
             return
         }
         makeVisible()

@@ -1,6 +1,8 @@
 package com.monetization.core.controllers
 
 import android.app.Activity
+import android.os.Bundle
+import com.google.android.gms.ads.LoadAdError
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.ad_units.core.AdUnit
 import com.monetization.core.commons.AdsCommons
@@ -180,41 +182,83 @@ abstract class AdsControllerBaseHelper(
     }
 
     fun onAdRevenue(
-        value: Long, currencyCode: String, precisionType: Int
+        value: Long,
+        currencyCode: String,
+        precisionType: Int,
+        adSourceName: String?,
+        adSourceId: String?,
+        adSourceInstanceName: String?,
+        adSourceInstanceId: String?,
+        extras: Bundle?
     ) {
         controllerListener?.onAdRevenue(
             adKey = adKey,
             adType = adType,
             value = value,
             currencyCode = currencyCode,
-            precisionType = precisionType
+            precisionType = precisionType,
+            adSourceName = adSourceName,
+            adSourceId = adSourceId,
+            adSourceInstanceName = adSourceInstanceName,
+            adSourceInstanceId = adSourceInstanceId,
+            extras = extras
         )
         logAds("$adType Ad Revenue(value=$value,currency=$currencyCode,precision=$precisionType),Key=$adKey,id=$latestAdIdRequested")
     }
 
+    data class AdapterResponses(
+        val message: String?,
+        val code: Int?,
+        val adSourceId: String,
+        val adSourceName: String,
+        val adSourceInstanceId: String,
+        val adSourceInstanceName: String,
+        val adapterClassName: String,
+        val credentials: Bundle,
+        val latencyMillis: Long,
+    )
 
     fun onAdFailed(
-        message: String, error: Int
+        error: LoadAdError
     ) {
         canRequestAd = true
         adInfo = adInfo?.copy(
             adFinalTime = Failed(
-                System.currentTimeMillis(), message, error.toString()
+                System.currentTimeMillis(), error.message, error.toString()
             )
         )
         addInAdHistory()
-        loadingStateListener?.onAdFailedToLoad(adKey, message, error)
+        val adapterResponses = error.responseInfo?.adapterResponses?.map {
+            AdapterResponses(
+                message = it.adError?.message,
+                code = it.adError?.code,
+                adSourceId = it.adSourceId,
+                adSourceName = it.adSourceName,
+                adSourceInstanceId = it.adSourceInstanceId,
+                adSourceInstanceName = it.adSourceInstanceName,
+                adapterClassName = it.adapterClassName,
+                credentials = it.credentials,
+                latencyMillis = it.latencyMillis,
+            )
+        }
+        loadingStateListener?.onAdFailedToLoad(
+            adKey = adKey,
+            message = error.message,
+            code = error.code,
+            mediationClassName = error.responseInfo?.mediationAdapterClassName,
+            adapterResponses = adapterResponses
+        )
+        logAds(
+            "$adType Ad Failed To Load, msg=${error.message},code=$error, Key=$adKey,id=$latestAdIdRequested",
+            true
+        )
         controllerListener?.onAdFailed(
             adKey = adKey,
             adType = adType,
-            message = message,
-            error = error,
+            message = error.message,
+            error = error.code,
             placementKey = placementKey,
             dataMap = customDataMap
-        )
-        logAds(
-            "$adType Ad Failed To Load, msg=$message,code=$error, Key=$adKey,id=$latestAdIdRequested",
-            true
         )
     }
 
@@ -232,18 +276,30 @@ abstract class AdsControllerBaseHelper(
         logAds("$adType loadAd function called,enabled=$isAdEnabled,requesting=${isAdRequesting()},isAdAvailable=${isAdAvailable()}")
         this.loadingStateListener = callback
         if (isAdEnabled.not() || placementKey.isRemoteAdEnabled(adKey, adType).not()) {
-            loadingStateListener?.onAdFailedToLoad(adKey, "${adType} Ad is not enabled", -1)
+            loadingStateListener?.onAdFailedToLoad(
+                adKey,
+                "${adType} Ad is not enabled",
+                -1,
+                null,
+                null
+            )
             return false
         }
         if (isAdRequesting()) {
             return false
         }
         if (isAdAvailable()) {
-            loadingStateListener?.onAdLoaded(adKey,mediationClassName)
+            loadingStateListener?.onAdLoaded(adKey, mediationClassName)
             return false
         }
         if (canLoadAd(placementKey).not()) {
-            callback?.onAdFailedToLoad(adKey, "Ad Is Restricted To Load, key=$adKey,type=$adType")
+            callback?.onAdFailedToLoad(
+                adKey,
+                "Ad Is Restricted To Load, key=$adKey,type=$adType",
+                -1,
+                null,
+                null
+            )
             return false
         }
         return true

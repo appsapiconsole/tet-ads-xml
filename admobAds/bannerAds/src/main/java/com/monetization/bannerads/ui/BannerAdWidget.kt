@@ -17,6 +17,7 @@ import com.monetization.core.commons.NativeConstants.inflateLayoutByName
 import com.monetization.core.commons.NativeConstants.makeGone
 import com.monetization.core.commons.NativeConstants.makeVisible
 import com.monetization.core.commons.NativeConstants.removeViewsFromIt
+import com.monetization.core.controllers.AdsControllerBaseHelper
 import com.monetization.core.listeners.UiAdsListener
 import com.monetization.core.managers.AdsLoadingStatusListener
 import com.monetization.core.models.RefreshAdInfo
@@ -80,9 +81,18 @@ class BannerAdWidget @JvmOverloads constructor(
                     uiListener?.onAdClicked(adKey)
                 }
 
-                override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
+                override fun onAdFailedToLoad(
+                    adKey: String,
+                    message: String,
+                    code: Int,
+                    mediationClassName: String?,
+                    adapterResponses: List<AdsControllerBaseHelper.AdapterResponses>?
+                ) {
                     adOnFailed()
-                    uiListener?.onAdFailed(adKey, message, code)
+                    uiListener?.onAdFailed(
+                        key = adKey, msg = message, code = code,
+                        mediationClassName = mediationClassName
+                    )
                 }
             }
         )

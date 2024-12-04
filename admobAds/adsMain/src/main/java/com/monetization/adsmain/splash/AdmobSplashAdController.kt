@@ -12,6 +12,7 @@ import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.adEnabledSdkString
 import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.commons.SdkConfigs.isRemoteAdEnabled
+import com.monetization.core.controllers.AdsControllerBaseHelper
 import com.monetization.core.managers.AdsLoadingStatusListener
 import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.interstitials.AdmobInterstitialAd
@@ -135,12 +136,24 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 }
             }
 
-            override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
+            override fun onAdFailedToLoad(
+                adKey: String,
+                message: String,
+                code: Int,
+                mediationClassName: String?,
+                adapterResponses: List<AdsControllerBaseHelper.AdapterResponses>?
+            ) {
                 logAds(
                     "Splash Ad onAdFailedToLoad,message=$message ,Handler Running=$isHandlerRunning",
                     true
                 )
-                loadingListener?.onAdFailedToLoad(adKey, message, code)
+                loadingListener?.onAdFailedToLoad(
+                    adKey,
+                    message,
+                    code,
+                    mediationClassName,
+                    adapterResponses
+                )
                 splashAdFailed = true
                 if (isScreenInPause.not() && listener != null) {
                     onAdDismissed(adKey)
@@ -216,7 +229,13 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
         val adKey = (splashAdType as SplashAdType.AdmobAppOpen).key
         val adController = AdmobAppOpenAdsManager.getAdController(adKey)
         if (adController == null) {
-            callback.onAdFailedToLoad(adKey, "No Controller for app open splash")
+            callback.onAdFailedToLoad(
+                adKey,
+                "No Controller for app open splash",
+                -1,
+                mediationClassName = null,
+                adapterResponses = null
+            )
             return
         }
         val listener = object : AdsLoadingStatusListener {
@@ -230,13 +249,19 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 if (appOpenAd != null) {
                     callback.onAdLoaded(adKey, mediationClassName)
                 } else {
-                    callback.onAdFailedToLoad(adKey, "onAdLoaded appOpenAd =null")
+                    callback.onAdFailedToLoad(adKey, "onAdLoaded appOpenAd =null", -1, null, null)
                 }
             }
 
-            override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
+            override fun onAdFailedToLoad(
+                adKey: String,
+                message: String,
+                code: Int,
+                mediationClassName: String?,
+                adapterResponses: List<AdsControllerBaseHelper.AdapterResponses>?
+            ) {
                 appOpenAd = null
-                callback.onAdFailedToLoad(message)
+                callback.onAdFailedToLoad(adKey, message, -1, null, null)
             }
         }
         adController.loadAd(
@@ -256,7 +281,13 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
         val adController =
             AdmobInterstitialAdsManager.getAdController(adKey)
         if (adController == null) {
-            callback.onAdFailedToLoad(adKey, "loadInterstitialAd adController == null, key=$adKey")
+            callback.onAdFailedToLoad(
+                adKey,
+                "loadInterstitialAd adController == null, key=$adKey",
+                -1,
+                null,
+                null
+            )
             return
         }
         val listener = object : AdsLoadingStatusListener {
@@ -269,13 +300,31 @@ class AdmobSplashAdController : DefaultLifecycleObserver {
                 if (interstitialAd != null) {
                     callback.onAdLoaded(adKey, mediationClassName)
                 } else {
-                    callback.onAdFailedToLoad(adKey, " onAdLoaded interstitialAd == null")
+                    callback.onAdFailedToLoad(
+                        adKey,
+                        " onAdLoaded interstitialAd == null",
+                        -1,
+                        null,
+                        null
+                    )
                 }
             }
 
-            override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
+            override fun onAdFailedToLoad(
+                adKey: String,
+                message: String,
+                code: Int,
+                mediationClassName: String?,
+                adapterResponses: List<AdsControllerBaseHelper.AdapterResponses>?
+            ) {
                 interstitialAd = null
-                callback.onAdFailedToLoad(message)
+                callback.onAdFailedToLoad(
+                    adKey = adKey,
+                    message = message,
+                    code = code,
+                    mediationClassName = mediationClassName,
+                    adapterResponses = adapterResponses
+                )
             }
         }
         adController.loadAd(

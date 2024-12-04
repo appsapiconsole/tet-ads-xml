@@ -11,6 +11,7 @@ import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.commons.SdkConfigs
 import com.monetization.core.commons.SdkConfigs.isRemoteAdEnabled
 import com.monetization.core.controllers.AdsController
+import com.monetization.core.controllers.AdsControllerBaseHelper
 import com.monetization.core.listeners.UiAdsListener
 import com.monetization.core.msgs.MessagesType
 
@@ -165,7 +166,7 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
                 callback = object : AdsLoadingStatusListener {
                     override fun onAdLoaded(adKey: String, mediationClassName: String?) {
                         loadingDialogListener?.invoke(false)
-                        uiAdsListener?.onAdLoaded(adKey,mediationClassName)
+                        uiAdsListener?.onAdLoaded(adKey, mediationClassName)
                         val newAd = controller.getAvailableAd()
                         logAds("showInstantAd onAdLoaded, Checks = ${onDismissListener != null && newAd != null && activity.isFinishing.not() && activity.isDestroyed.not()}")
                         if (onDismissListener != null && newAd != null && activity.isFinishing.not() && activity.isDestroyed.not()) {
@@ -176,10 +177,21 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
                         }
                     }
 
-                    override fun onAdFailedToLoad(adKey: String, message: String, code: Int) {
+                    override fun onAdFailedToLoad(
+                        adKey: String,
+                        message: String,
+                        code: Int,
+                        mediationClassName: String?,
+                        adapterResponses: List<AdsControllerBaseHelper.AdapterResponses>?
+                    ) {
                         AdsCommons.logAds("showInstantAd onAdFailedToLoad $message,$code")
                         loadingDialogListener?.invoke(false)
-                        uiAdsListener?.onAdFailed(adKey, message, code)
+                        uiAdsListener?.onAdFailed(
+                            key = adKey,
+                            msg = message,
+                            code = code,
+                            mediationClassName = mediationClassName
+                        )
                         stopHandler()
                         onFreeAd(MessagesType.AdLoadFailed)
                     }

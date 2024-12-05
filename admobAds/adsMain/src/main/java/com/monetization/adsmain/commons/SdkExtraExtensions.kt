@@ -12,13 +12,14 @@ import com.monetization.bannerads.AdmobBannerAdsManager
 import com.monetization.bannerads.BannerAdSize
 import com.monetization.bannerads.BannerAdType
 import com.monetization.core.ad_units.core.AdType
-import com.monetization.core.commons.AdsCommons.adEnabledSdkString
 import com.monetization.core.commons.AdsCommons.logAds
-import com.monetization.core.commons.SdkConfigs
 import com.monetization.core.controllers.AdsController
 import com.monetization.core.listeners.ControllersListener
 import com.monetization.core.managers.AdsLoadingStatusListener
-import com.monetization.core.managers.AdsManager
+import com.monetization.core.provider.ad_request.AdRequestProvider
+import com.monetization.core.provider.ad_request.DefaultAdRequestProvider
+import com.monetization.core.provider.nativeAds.DefaultNativeOptionsProvider
+import com.monetization.core.provider.nativeAds.NativeOptionsProvider
 import com.monetization.interstitials.AdmobInterstitialAdsController
 import com.monetization.interstitials.AdmobInterstitialAdsManager
 import com.monetization.nativeads.AdmobNativeAdsController
@@ -95,9 +96,10 @@ fun String.getAdController(adType: AdType): AdsController? {
 }
 
 fun AdmobInterstitialAdsManager.addNewController(
-    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null
+    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null,
+    adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
 ) {
-    addNewController(AdmobInterstitialAdsController(adKey, adIdsList, listener))
+    addNewController(AdmobInterstitialAdsController(adKey, adIdsList, listener, adRequestProvider))
 }
 
 fun addNewController(
@@ -105,38 +107,66 @@ fun addNewController(
     adKey: String,
     adIdsList: List<String>,
     bannerAdType: BannerAdType? = null,
-    listener: ControllersListener? = null
+    listener: ControllersListener? = null,
+    adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
+    nativeAdOptionsProvider: NativeOptionsProvider = DefaultNativeOptionsProvider(),
 ) {
     when (adType) {
-        AdType.NATIVE -> AdmobNativeAdsManager.addNewController(adKey, adIdsList, listener)
+        AdType.NATIVE -> AdmobNativeAdsManager.addNewController(
+            adKey = adKey,
+            adIdsList = adIdsList,
+            listener = listener,
+            adRequestProvider = adRequestProvider,
+            nativeAdOptionsProvider = nativeAdOptionsProvider
+        )
+
         AdType.INTERSTITIAL -> AdmobInterstitialAdsManager.addNewController(
-            adKey, adIdsList, listener
+            adKey, adIdsList, listener, adRequestProvider
         )
 
         AdType.REWARDED -> AdmobRewardedAdsManager.addNewController(adKey, adIdsList, listener)
         AdType.REWARDED_INTERSTITIAL -> AdmobRewardedInterAdsManager.addNewController(
-            adKey, adIdsList, listener
+            adKey, adIdsList, listener, adRequestProvider
         )
 
         AdType.BANNER -> {
             bannerAdType?.let {
                 AdmobBannerAdsManager.addNewController(
                     adKey = adKey, adIdsList = adIdsList,
-                    bannerAdType = it, listener = listener
+                    bannerAdType = it, listener = listener,
+                    adRequestProvider = adRequestProvider
                 )
             } ?: run {
                 throw IllegalArgumentException("Banner Ad Type Cannot Be Null For Key $adKey")
             }
         }
 
-        AdType.AppOpen -> AdmobAppOpenAdsManager.addNewController(adKey, adIdsList, listener)
+        AdType.AppOpen -> {
+            AdmobAppOpenAdsManager.addNewController(
+                adKey = adKey,
+                adIdsList = adIdsList,
+                listener = listener,
+                adRequestProvider = adRequestProvider
+            )
+        }
     }
 }
 
 fun AdmobNativeAdsManager.addNewController(
-    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null
+    adKey: String, adIdsList: List<String>,
+    listener: ControllersListener? = null,
+    adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
+    nativeAdOptionsProvider: NativeOptionsProvider = DefaultNativeOptionsProvider(),
 ) {
-    addNewController(AdmobNativeAdsController(adKey, adIdsList, listener))
+    addNewController(
+        AdmobNativeAdsController(
+            adKey = adKey,
+            adIdsList = adIdsList,
+            listener = listener,
+            adRequestProvider = adRequestProvider,
+            nativeAdOptions = nativeAdOptionsProvider
+        )
+    )
 }
 
 
@@ -144,36 +174,55 @@ fun AdmobBannerAdsManager.addNewController(
     adKey: String,
     adIdsList: List<String>,
     bannerAdType: BannerAdType = BannerAdType.Normal(BannerAdSize.AdaptiveBanner),
-    listener: ControllersListener? = null
+    listener: ControllersListener? = null,
+    adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
 ) {
     addNewController(
         controller = AdmobBannerAdsController(
             adKey = adKey,
             adIdsList = adIdsList,
             bannerAdType = bannerAdType,
-            listener = listener
+            listener = listener,
+            adRequestProvider = adRequestProvider
         )
     )
 }
 
 fun AdmobAppOpenAdsManager.addNewController(
-    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null
+    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null,
+    adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
 ) {
-    addNewController(AdmobAppOpenAdsController(adKey, adIdsList, listener))
+    addNewController(
+        controller = AdmobAppOpenAdsController(
+            adKey,
+            adIdsList,
+            listener,
+            adRequestProvider
+        )
+    )
 }
 
 
 fun AdmobRewardedAdsManager.addNewController(
-    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null
+    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null,
+    adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
 ) {
-    addNewController(AdmobRewardedAdsController(adKey, adIdsList, listener))
+    addNewController(
+        controller = AdmobRewardedAdsController(
+            adKey,
+            adIdsList,
+            listener,
+            adRequestProvider
+        )
+    )
 }
 
 
 fun AdmobRewardedInterAdsManager.addNewController(
-    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null
+    adKey: String, adIdsList: List<String>, listener: ControllersListener? = null,
+    adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
 ) {
-    addNewController(AdmobRewardedInterAdsController(adKey, adIdsList, listener))
+    addNewController(AdmobRewardedInterAdsController(adKey, adIdsList, listener, adRequestProvider))
 }
 
 

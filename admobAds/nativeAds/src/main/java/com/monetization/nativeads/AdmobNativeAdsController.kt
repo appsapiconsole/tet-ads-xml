@@ -22,10 +22,11 @@ class AdmobNativeAdsController(
     adKey: String, adIdsList: List<String>,
     listener: ControllersListener? = null,
     private val adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
-    private val nativeAdOptionsProvider: NativeOptionsProvider = DefaultNativeOptionsProvider(),
+    private val nativeAdOptions: NativeOptionsProvider = DefaultNativeOptionsProvider(),
 ) : AdsControllerBaseHelper(adKey, AdType.NATIVE, adIdsList, listener) {
 
     private var currentNativeAd: AdmobNativeAd? = null
+    private var nativeAdOptionsProvider: NativeOptionsProvider = nativeAdOptions
 
     private var shownNativeAds = mutableListOf<AdmobNativeAd>()
 
@@ -33,6 +34,9 @@ class AdmobNativeAdsController(
         shownNativeAds.add(admobNativeAd)
     }
 
+    fun setNativeAdOptions(provider: NativeOptionsProvider) {
+        nativeAdOptionsProvider = provider
+    }
 
     override fun loadAd(
         placementKey: String,

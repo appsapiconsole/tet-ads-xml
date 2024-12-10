@@ -49,6 +49,10 @@ class AdsUiWidget @JvmOverloads constructor(
             bannerWidget.attachLifecycle(lifecycle)
         }
     }
+    fun canRefreshAdView(check: Boolean){
+        nativeWidget.canRefreshAdLayout(check)
+        bannerWidget.canRefreshAdLayout(check)
+    }
 
     fun removeLifecycle() {
         nativeWidget.removeLifecycle()

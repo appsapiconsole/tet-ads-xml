@@ -25,6 +25,7 @@ import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.core.msgs.MessagesType
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
+import com.monetization.core.ui.widgetBase.BaseAdsWidget
 import com.monetization.interstitials.AdmobInterstitialAdsManager
 import com.monetization.interstitials.extensions.InstantInterstitialAdsManager
 import com.remote.firebaseconfigs.RemoteCommons.toConfigString
@@ -47,6 +48,7 @@ class MainActivity : ComponentActivity() {
         AdmobInterstitialAdsManager.addNewController(
             "Splash", listOf("")
         )
+        binding.adFrame.canRefreshAdView()
         binding.showAd.setOnClickListener {
             showSplashAd {
                 startActivity(

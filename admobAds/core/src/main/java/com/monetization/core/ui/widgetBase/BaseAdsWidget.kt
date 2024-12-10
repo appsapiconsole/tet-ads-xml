@@ -293,10 +293,17 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         }
     }
 
+    private var canRefreshAdLayout = true
+    fun canRefreshAdLayout(check: Boolean) {
+        canRefreshAdLayout = check
+    }
+
     fun refreshLayout() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            rootView.requestLayout()
-        }, 50)
+        if (canRefreshAdLayout) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                rootView.requestLayout()
+            }, 50)
+        }
     }
 
 

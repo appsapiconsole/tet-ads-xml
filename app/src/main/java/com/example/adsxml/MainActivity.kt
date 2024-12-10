@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
         AdmobInterstitialAdsManager.addNewController(
             "Splash", listOf("")
         )
-        binding.adFrame.canRefreshAdView()
+        binding.adFrame.canRefreshAdView(false)
         binding.showAd.setOnClickListener {
             showSplashAd {
                 startActivity(

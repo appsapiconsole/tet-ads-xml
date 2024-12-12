@@ -22,7 +22,7 @@ object FullScreenAdsShowManager {
         key: String,
         onAdDismiss: (Boolean, MessagesType?) -> Unit,
         activity: Activity,
-        showAdShowOptions: AdShowOptions = AdShowOptions.ShowOnlyIfAvailable,
+        showOptions: AdShowOptions = AdShowOptions.ShowOnlyIfAvailable,
         uiAdsListener: UiAdsListener? = null,
         adType: AdType,
         requestNewIfNotAvailable: Boolean = false,
@@ -33,7 +33,7 @@ object FullScreenAdsShowManager {
         onRewarded: ((Boolean) -> Unit)? = null,
         onCounterUpdate: ((Int) -> Unit)? = null,
     ) {
-        val isInstantAd = when (showAdShowOptions) {
+        val isInstantAd = when (showOptions) {
             AdShowOptions.InstantAd -> {
                 true
             }

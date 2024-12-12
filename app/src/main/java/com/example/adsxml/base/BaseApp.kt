@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import com.monetization.adsmain.sdk.AdmobAppOpenAdsHelper
 import com.monetization.adsmain.showRates.full_screen_ads.FullScreenAdsShowManager
+import com.monetization.adsmain.showRates.full_screen_ads.toInstantAd
 import com.monetization.adsmain.splash.AdmobSplashAdController
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.SdkConfigs
@@ -98,7 +99,7 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
                     activity = currentActivity!!,
                     key = "AppOpen",
                     counterKey = null,
-                    isInstantAd = true,
+                    showOptions = true.toInstantAd(),
                     onAdDismiss = { adShown: Boolean, msgType: MessagesType? ->
 
                     },

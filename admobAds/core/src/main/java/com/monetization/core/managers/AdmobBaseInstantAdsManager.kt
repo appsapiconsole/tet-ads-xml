@@ -37,10 +37,10 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
     }
 
     fun onFreeAd(messagesType: MessagesType?, check: Boolean = false) {
+        isFullScreenAdShowing = false
         onDismissListener?.invoke(check, messagesType)
         uiAdsListener = null
         onDismissListener = null
-        isFullScreenAdShowing = false
         stopHandler()
     }
 
@@ -108,6 +108,7 @@ abstract class AdmobBaseInstantAdsManager(private val adType: AdType) {
         }
         loadingDialogListener = onLoadingDialogStatusChange
         onDismissListener = onAdDismiss
+        isFullScreenAdShowing = true
         this.uiAdsListener = uiAdsListener
         if (controller == null) {
             logAds("No Controller Available Key=$key,type=$adType", true)

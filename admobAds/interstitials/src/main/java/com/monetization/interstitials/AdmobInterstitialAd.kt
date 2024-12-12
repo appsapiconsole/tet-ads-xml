@@ -18,9 +18,9 @@ class AdmobInterstitialAd(
 
 
     override fun showAd(activity: Activity, callBack: FullScreenAdsShowListener) {
-        if (AdsCommons.isFullScreenAdShowing) {
+        /*if (AdsCommons.isFullScreenAdShowing) {
             return
-        }
+        }*/
         AdsCommons.isFullScreenAdShowing = true
         val controller: AdsControllerBaseHelper? = AdmobInterstitialAdsManager.getAdController(adKey)
         interstitialAds.fullScreenContentCallback = object : FullScreenContentCallback() {

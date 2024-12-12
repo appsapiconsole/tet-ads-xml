@@ -20,9 +20,9 @@ class AdmobRewardedAd(
         activity: Activity,
         callBack: FullScreenAdsShowListener
     ) {
-        if (AdsCommons.isFullScreenAdShowing) {
+        /*if (AdsCommons.isFullScreenAdShowing) {
             return
-        }
+        }*/
         AdsCommons.isFullScreenAdShowing = true
         val controller: AdsControllerBaseHelper? = AdmobRewardedAdsManager.getAdController(adKey)
         rewardedAd.fullScreenContentCallback = object : FullScreenContentCallback() {

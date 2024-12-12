@@ -2,30 +2,25 @@ package com.example.adsxml
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
+import com.example.adsxml.base.BaseApp
 import com.example.adsxml.databinding.ActivityMainBinding
 import com.monetization.adsmain.commons.addNewController
-import com.monetization.adsmain.commons.loadAd
 import com.monetization.adsmain.commons.sdkBannerAd
 import com.monetization.adsmain.commons.sdkNativeAdd
 import com.monetization.adsmain.showRates.full_screen_ads.FullScreenAdsShowManager
 import com.monetization.adsmain.splash.AdmobSplashAdController
 import com.monetization.adsmain.splash.SplashAdType
-import com.monetization.bannerads.BannerAdSize
-import com.monetization.bannerads.BannerAdType
+import com.monetization.appopen.AdmobAppOpenAdsManager
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.Utils.resToView
 import com.monetization.core.listeners.UiAdsListener
 import com.monetization.core.managers.FullScreenAdsShowListener
-import com.monetization.core.msgs.MessagesType
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
-import com.monetization.core.ui.widgetBase.BaseAdsWidget
 import com.monetization.interstitials.AdmobInterstitialAdsManager
 import com.monetization.interstitials.extensions.InstantInterstitialAdsManager
 import com.remote.firebaseconfigs.RemoteCommons.toConfigString
@@ -45,16 +40,24 @@ class MainActivity : ComponentActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        (BaseApp.appContext as BaseApp).showAppOpenAd()
+
         AdmobInterstitialAdsManager.addNewController(
             "Splash", listOf("")
         )
+        AdmobAppOpenAdsManager.addNewController(
+            "AppOpen", listOf("")
+        )
         binding.adFrame.canRefreshAdView(false)
         binding.showAd.setOnClickListener {
-            showSplashAd {
+            showCounterAd {
+                startActivity(Intent(this@MainActivity, MainActivity::class.java))
+            }
+            /*showSplashAd {
                 startActivity(
                     Intent(this@MainActivity, ComposeActivity::class.java)
                 )
-            }
+            }*/
         }
 
     }
@@ -82,17 +85,16 @@ class MainActivity : ComponentActivity() {
     private fun showCounterAd(onAdDismiss: (Boolean) -> Unit) {
         FullScreenAdsShowManager.showFullScreenAd(
             placementKey = true.toConfigString(),
-            key = "Inter",
+            key = "Splash",
             requestNewIfAdShown = true,
             normalLoadingTime = 0,
-            instantLoadingTime = 0,
+            instantLoadingTime = 10000,
             onAdDismiss = { it, msg ->
                 onAdDismiss.invoke(it)
             },
             activity = this@MainActivity,
             adType = AdType.INTERSTITIAL,
             isInstantAd = true,
-            counterKey = ""
         )
     }
 

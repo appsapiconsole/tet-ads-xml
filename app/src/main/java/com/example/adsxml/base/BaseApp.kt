@@ -2,7 +2,10 @@ package com.example.adsxml.base
 
 import android.app.Activity
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import com.monetization.adsmain.sdk.AdmobAppOpenAdsHelper
+import com.monetization.adsmain.showRates.full_screen_ads.FullScreenAdsShowManager
 import com.monetization.adsmain.splash.AdmobSplashAdController
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.SdkConfigs
@@ -10,10 +13,11 @@ import com.monetization.core.commons.placementToAdWidgetModel
 import com.monetization.core.listeners.RemoteConfigsProvider
 import com.monetization.core.listeners.SdkDialogsListener
 import com.monetization.core.listeners.SdkListener
+import com.monetization.core.msgs.MessagesType
 import com.monetization.core.ui.AdsWidgetData
 import com.monetization.core.utils.dialog.SdkDialogs
 import com.monetization.core.utils.dialog.onAdLoadingDialogStateChange
-import com.monetization.core.utils.dialog.showNormalLoadingDialog
+import com.remote.firebaseconfigs.RemoteCommons.toConfigString
 import com.remote.firebaseconfigs.SdkRemoteConfigController
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -21,9 +25,12 @@ import org.koin.dsl.module
 
 class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
 
+    private var canShowAppOpenAd = false
+    private var currentActivity: Activity? = null
+
     override fun onCreate() {
         super.onCreate()
-
+        appContext = applicationContext
         val module = module {
             single {
                 AdmobSplashAdController()
@@ -75,35 +82,63 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
             }
         }, testModeEnable = true)
         registerActivityLifecycleCallbacks(this)
+
     }
 
+    companion object {
+        var appContext: Context? = null
+    }
+
+    fun showAppOpenAd() {
+        registerActivityLifecycleCallbacks(this)
+        AdmobAppOpenAdsHelper.initOpensAds(
+            onShowAppOpenAd = {
+                FullScreenAdsShowManager.showFullScreenAd(
+                    placementKey = true.toConfigString(),
+                    activity = currentActivity!!,
+                    key = "AppOpen",
+                    counterKey = null,
+                    isInstantAd = true,
+                    onAdDismiss = { adShown: Boolean, msgType: MessagesType? ->
+
+                    },
+                    adType = AdType.AppOpen
+                )
+            },
+            canShowAppOpenAd = {
+                canShowAppOpenAd && currentActivity != null
+            }
+        )
+    }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {
-
+        currentActivity = p0
+        canShowAppOpenAd = true
     }
 
     override fun onActivityStarted(p0: Activity) {
-
+        currentActivity = p0
+        canShowAppOpenAd = true
     }
 
     override fun onActivityResumed(p0: Activity) {
-
+        currentActivity = p0
+        canShowAppOpenAd = true
     }
 
     override fun onActivityPaused(p0: Activity) {
-
     }
 
     override fun onActivityStopped(p0: Activity) {
-
+        currentActivity = null
     }
 
     override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
-
     }
 
     override fun onActivityDestroyed(p0: Activity) {
-
+        currentActivity = null
+        canShowAppOpenAd = false
     }
 
 }

@@ -15,9 +15,9 @@ class AdmobAppOpenAd(
     val adKey: String,
 ) : GeneralInterOrAppOpenAd {
     override fun showAd(activity: Activity, callBack: FullScreenAdsShowListener) {
-        if (AdsCommons.isFullScreenAdShowing) {
+        /*if (AdsCommons.isFullScreenAdShowing) {
             return
-        }
+        }*/
         AdsCommons.isFullScreenAdShowing = true
         val controller: AdsControllerBaseHelper? = AdmobAppOpenAdsManager.getAdController(adKey)
         appOpenAd.fullScreenContentCallback = object : FullScreenContentCallback() {

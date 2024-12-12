@@ -23,10 +23,10 @@ abstract class AdmobBasePreloadAdsManager(
     private var onDismissListener: ((Boolean, MessagesType?) -> Unit)? = null
 
     private fun onFreeAd(msgType: MessagesType?, check: Boolean = false) {
+        isFullScreenAdShowing = false
+        uiAdsListener = null
         onDismissListener?.invoke(check, msgType)
         onDismissListener = null
-        uiAdsListener = null
-        isFullScreenAdShowing = false
     }
 
     private fun allowed(key: String, placementKey: String): Boolean {
@@ -65,6 +65,7 @@ abstract class AdmobBasePreloadAdsManager(
         loadingDialogListener = onLoadingDialogStatusChange
         onDismissListener = onAdDismiss
         this.uiAdsListener = uiAdsListener
+        isFullScreenAdShowing = true
         val availableAd = controller?.getAvailableAd()
         if (controller == null) {
             logAds("No Controller Found Against $key,$adType", true)

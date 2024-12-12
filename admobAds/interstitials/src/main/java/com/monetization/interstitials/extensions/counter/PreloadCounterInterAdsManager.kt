@@ -12,6 +12,7 @@ import com.monetization.interstitials.extensions.PreloadInterstitialAdsManager
 
 object PreloadCounterInterAdsManager {
 
+    @Deprecated("Please Use FullScreenAdsShowManager to show ads")
     fun tryShowingInterstitialAd(
         placementKey: String,
         key: String,

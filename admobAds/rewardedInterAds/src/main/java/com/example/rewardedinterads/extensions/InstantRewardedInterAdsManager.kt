@@ -13,6 +13,7 @@ import com.monetization.core.msgs.MessagesType
 object InstantRewardedInterAdsManager : AdmobBaseInstantAdsManager(AdType.REWARDED_INTERSTITIAL) {
 
 
+    @Deprecated("Please Use FullScreenAdsShowManager to show ads")
     fun showInstantRewardedInterstitialAd(
         enableKey: String,
         activity: Activity,

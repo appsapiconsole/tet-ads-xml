@@ -2,10 +2,11 @@ package com.monetization.adsmain.showRates.full_screen_ads
 
 import android.app.Activity
 import com.example.rewadedad.extensions.counter.InstantCounterRewardedAdsManager
+import com.example.rewardedinterads.extensions.counter.InstantCounterRewInterManager
 import com.example.rewardedinterads.extensions.counter.PreloadCounterRewInterManager
 import com.monetization.adsmain.commons.getAdController
-import com.monetization.appopen.extension.InstantAppOpenAdsManager
-import com.monetization.appopen.extension.PreloadAppOpenAdsManager
+import com.monetization.appopen.extension.counter.InstantCounterAppOpenAdsManager
+import com.monetization.appopen.extension.counter.PreloadCounterAppOpenAdsManager
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.commons.SdkConfigs
@@ -158,7 +159,7 @@ object FullScreenAdsShowManager {
 
             AdType.REWARDED_INTERSTITIAL -> {
                 if (isInstantAd) {
-                    InstantCounterRewardedAdsManager.showInstantRewardedAd(
+                    InstantCounterRewInterManager.showInstantRewardedInterstitialAd(
                         placementKey = placementKey,
                         activity = activity,
                         key = key,
@@ -214,7 +215,7 @@ object FullScreenAdsShowManager {
 
             AdType.AppOpen -> {
                 if (isInstantAd) {
-                    InstantAppOpenAdsManager.showInstantAppOpenAd(
+                    InstantCounterAppOpenAdsManager.showInstantAppOpenAd(
                         placementKey = placementKey,
                         activity = activity,
                         key = key,
@@ -242,10 +243,11 @@ object FullScreenAdsShowManager {
                                 showDialog = it,
                                 isForBlackBg = true
                             )
-                        }
+                        },
+                        counterKey = counterKey
                     )
                 } else {
-                    PreloadAppOpenAdsManager.tryShowingAppOpenAd(
+                    PreloadCounterAppOpenAdsManager.tryShowingAppOpenAd(
                         placementKey = placementKey,
                         key = key,
                         activity = activity,
@@ -273,7 +275,8 @@ object FullScreenAdsShowManager {
                                 showDialog = it,
                                 isForBlackBg = true
                             )
-                        }
+                        },
+                        counterKey = counterKey
                     )
                 }
             }

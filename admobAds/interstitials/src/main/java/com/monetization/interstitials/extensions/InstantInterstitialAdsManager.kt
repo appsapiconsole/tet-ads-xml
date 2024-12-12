@@ -12,6 +12,7 @@ import com.monetization.interstitials.AdmobInterstitialAdsManager
 
 object InstantInterstitialAdsManager : AdmobBaseInstantAdsManager(AdType.INTERSTITIAL) {
 
+    @Deprecated("Please Use FullScreenAdsShowManager to show ads")
     fun showInstantInterstitialAd(
         placementKey: String,
         activity: Activity,

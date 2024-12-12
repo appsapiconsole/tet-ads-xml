@@ -12,6 +12,7 @@ import com.monetization.core.msgs.MessagesType
 
 object PreloadCounterRewInterManager {
 
+    @Deprecated("Please Use FullScreenAdsShowManager to show ads")
     fun tryShowingRewardedInterAd(
         placementKey: String,
         key: String,

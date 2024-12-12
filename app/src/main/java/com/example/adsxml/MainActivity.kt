@@ -10,6 +10,7 @@ import com.example.adsxml.databinding.ActivityMainBinding
 import com.monetization.adsmain.commons.addNewController
 import com.monetization.adsmain.commons.sdkBannerAd
 import com.monetization.adsmain.commons.sdkNativeAdd
+import com.monetization.adsmain.showRates.full_screen_ads.AdShowOptions
 import com.monetization.adsmain.showRates.full_screen_ads.FullScreenAdsShowManager
 import com.monetization.adsmain.splash.AdmobSplashAdController
 import com.monetization.adsmain.splash.SplashAdType
@@ -108,7 +109,7 @@ class MainActivity : ComponentActivity() {
             },
             activity = this@MainActivity,
             adType = AdType.INTERSTITIAL,
-            isInstantAd = true,
+            showAdShowOptions = AdShowOptions.InstantAd
         )
     }
 

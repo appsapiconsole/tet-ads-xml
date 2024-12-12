@@ -3,8 +3,7 @@ package com.monetization.adsmain.showRates.full_screen_ads
 import android.app.Activity
 import com.example.rewadedad.extensions.counter.InstantCounterRewardedAdsManager
 import com.example.rewardedinterads.extensions.counter.PreloadCounterRewInterManager
-import com.monetization.adsmain.commons.errorLogging
-import com.monetization.adsmain.commons.getAdTypeByKey
+import com.monetization.adsmain.commons.getAdController
 import com.monetization.appopen.extension.InstantAppOpenAdsManager
 import com.monetization.appopen.extension.PreloadAppOpenAdsManager
 import com.monetization.core.ad_units.core.AdType
@@ -22,7 +21,7 @@ object FullScreenAdsShowManager {
         key: String,
         onAdDismiss: (Boolean, MessagesType?) -> Unit,
         activity: Activity,
-        isInstantAd: Boolean = false,
+        showAdShowOptions: AdShowOptions = AdShowOptions.ShowOnlyIfAvailable,
         uiAdsListener: UiAdsListener? = null,
         adType: AdType,
         requestNewIfNotAvailable: Boolean = false,
@@ -33,6 +32,23 @@ object FullScreenAdsShowManager {
         onRewarded: ((Boolean) -> Unit)? = null,
         onCounterUpdate: ((Int) -> Unit)? = null,
     ) {
+        val isInstantAd = when (showAdShowOptions) {
+            AdShowOptions.InstantAd -> {
+                true
+            }
+
+            AdShowOptions.ShowOnlyIfAvailable -> {
+                false
+            }
+
+            AdShowOptions.InstantIfRequesting -> {
+                key.getAdController(adType)?.isAdRequesting()
+            }
+
+            AdShowOptions.InstantIfNotAvailable -> {
+                key.getAdController(adType)?.isAdAvailable()?.not()
+            }
+        } ?: false
         when (adType) {
             AdType.INTERSTITIAL -> {
                 if (isInstantAd) {

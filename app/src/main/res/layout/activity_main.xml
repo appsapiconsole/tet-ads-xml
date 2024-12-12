@@ -7,10 +7,22 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/black" />
+
     <com.monetization.adsmain.widgets.AdsUiWidget
         android:id="@+id/adFrame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black" />
+
     <com.monetization.adsmain.widgets.AdsUiWidget
         android:id="@+id/adFrameTwo"
         android:layout_width="match_parent"
@@ -33,6 +45,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show" />
+    <Button
+        android:id="@+id/showShimmer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Shimmer" />
 
     <Button
         android:id="@+id/refreshAd"

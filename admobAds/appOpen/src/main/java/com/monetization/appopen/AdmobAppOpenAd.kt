@@ -9,6 +9,7 @@ import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.core.ad_units.GeneralInterOrAppOpenAd
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons
+import com.monetization.core.commons.AdsCommons.logAds
 
 class AdmobAppOpenAd(
     val appOpenAd: AppOpenAd,
@@ -23,33 +24,36 @@ class AdmobAppOpenAd(
         appOpenAd.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                 super.onAdFailedToShowFullScreenContent(p0)
+                logAds("onAdFailedToShowFullScreenContent Inter", true)
                 AdsCommons.isFullScreenAdShowing = false
-                AdmobAppOpenAdsManager.getAdController(adKey)?.destroyAd(activity)
-                callBack.onAdDismiss(adKey)
+                controller?.onFailToShow()
+                callBack.onAdShownFailed(adKey)
             }
 
             override fun onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent()
                 AdmobAppOpenAdsManager.getAdController(adKey)?.destroyAd(activity)
+                controller?.onAdShown()
                 callBack.onAdShown(adKey)
             }
 
             override fun onAdClicked() {
                 super.onAdClicked()
-                callBack.onAdClick(adKey)
                 controller?.onAdClick()
+                callBack.onAdClick(adKey)
             }
 
             override fun onAdImpression() {
                 super.onAdImpression()
                 controller?.onImpression()
+                callBack.onAdImpression(adKey)
             }
 
             override fun onAdDismissedFullScreenContent() {
                 super.onAdDismissedFullScreenContent()
                 AdsCommons.isFullScreenAdShowing = false
-                callBack.onAdDismiss(adKey, true)
                 controller?.onDismissed()
+                callBack.onAdDismiss(adKey, true)
             }
         }
         appOpenAd.show(activity)

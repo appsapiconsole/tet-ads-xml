@@ -32,7 +32,9 @@ abstract class AdsControllerBaseHelper(
     }
 
     private var adsHistory = mutableListOf<AdUnit>()
-    private var canRequestAd = true
+
+    //    private var canRequestAd = true
+    private var state: ControllerState = ControllerState.NoAdAvailable
     private var isAdEnabled = true
     private var indexOfId = 0
     private var placementKey: String = ""
@@ -117,7 +119,7 @@ abstract class AdsControllerBaseHelper(
 
     fun onAdRequested(
     ) {
-        canRequestAd = false
+        state = ControllerState.AdRequesting
         adRequestCount += 1
         adInfo = AdmobAdInfo(
             adRequestTime = System.currentTimeMillis(),
@@ -136,6 +138,16 @@ abstract class AdsControllerBaseHelper(
             dataMap = customDataMap
         )
         logAds("$adType Ad Requested,Key=$adKey,Id=$latestAdIdRequested")
+    }
+
+    fun onAdShown() {
+        controllerListener?.onAdShown(
+            adKey = adKey,
+            adType = adType,
+            placementKey = placementKey,
+            dataMap = customDataMap
+        )
+        logAds("$adType Ad Shown,Key=$adKey")
     }
 
     fun onAdClick() {
@@ -164,7 +176,7 @@ abstract class AdsControllerBaseHelper(
 
     private var mediationClassName: String? = null
     fun onLoaded(mediationClassName: String?) {
-        canRequestAd = true
+        state = ControllerState.AdLoaded
         this.mediationClassName = mediationClassName
         adInfo = adInfo?.copy(
             adFinalTime = Loaded(System.currentTimeMillis())
@@ -221,7 +233,7 @@ abstract class AdsControllerBaseHelper(
     fun onAdFailed(
         error: LoadAdError
     ) {
-        canRequestAd = true
+        state = ControllerState.NoAdAvailable
         adInfo = adInfo?.copy(
             adFinalTime = Failed(
                 System.currentTimeMillis(), error.message, error.toString()
@@ -335,7 +347,7 @@ abstract class AdsControllerBaseHelper(
     }
 
     override fun isAdRequesting(): Boolean {
-        return canRequestAd.not()
+        return state == ControllerState.AdRequesting
     }
 
     override fun isAdAvailableOrRequesting(): Boolean {
@@ -358,6 +370,14 @@ abstract class AdsControllerBaseHelper(
             placementKey = placementKey,
             dataMap = customDataMap
         )
+    }
+
+    fun setControllerState(state: ControllerState) {
+        this.state = state
+    }
+
+    override fun isAdAvailable(): Boolean {
+        return state == ControllerState.AdLoaded
     }
 
 }

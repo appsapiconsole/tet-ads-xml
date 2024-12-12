@@ -39,7 +39,22 @@ class AdsUiWidget @JvmOverloads constructor(
     private var adEnabled: Boolean = false
     private var adsWidgetDataModel: AdsWidgetData? = null
 
-    fun getNativeWidget() = nativeWidget
+    fun getNativeWidget(): NativeAdWidget {
+        return nativeWidget
+    }
+
+    fun showShimmerView(
+        shimmer: ShimmerInfo?, activity: Activity, forNative: Boolean
+    ) {
+        if (forNative) {
+            removeAndAdNativeWidget()
+            nativeWidget.showShimmerLayout(shimmer, activity)
+        } else {
+            removeAndAdBannerWidget()
+            bannerWidget.showShimmerLayout(shimmer, activity)
+        }
+    }
+
     fun getBannerWidget() = bannerWidget
 
     fun setLifecycle(lifecycle: Lifecycle, isNativeAd: Boolean) {
@@ -49,7 +64,8 @@ class AdsUiWidget @JvmOverloads constructor(
             bannerWidget.attachLifecycle(lifecycle)
         }
     }
-    fun canRefreshAdView(check: Boolean){
+
+    fun canRefreshAdView(check: Boolean) {
         nativeWidget.canRefreshAdLayout(check)
         bannerWidget.canRefreshAdLayout(check)
     }

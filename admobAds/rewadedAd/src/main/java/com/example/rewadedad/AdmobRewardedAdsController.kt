@@ -9,6 +9,7 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.ad_units.core.AdUnit
 import com.monetization.core.controllers.AdsControllerBaseHelper
+import com.monetization.core.controllers.ControllerState
 import com.monetization.core.listeners.ControllersListener
 import com.monetization.core.managers.AdsLoadingStatusListener
 import com.monetization.core.provider.ad_request.AdRequestProvider
@@ -73,11 +74,9 @@ class AdmobRewardedAdsController(
 
     override fun destroyAd(activity: Activity?) {
         currentRewardedAd = null
+        setControllerState(ControllerState.NoAdAvailable)
     }
 
-    override fun isAdAvailable(): Boolean {
-        return currentRewardedAd != null
-    }
 
     override fun getAvailableAd(): AdUnit? {
         return currentRewardedAd

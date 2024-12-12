@@ -67,6 +67,14 @@ interface ControllersListener {
     ) {
     }
 
+    fun onAdShown(
+        adKey: String,
+        adType: AdType,
+        placementKey: String,
+        dataMap: HashMap<String, String>
+    ) {
+    }
+
     fun onAdFailed(
         adKey: String,
         adType: AdType,

@@ -257,10 +257,10 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         if (shimmerInfo != ShimmerInfo.None) {
             if (isForRefresh) {
                 if (refreshAdInfo.showShimmer) {
-                    showShimmerLayout()
+                    activity?.let { showShimmerLayout(shimmerInfo, it) }
                 }
             } else {
-                showShimmerLayout()
+                activity?.let { showShimmerLayout(shimmerInfo, it) }
             }
         }
         loadAd()
@@ -308,7 +308,7 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
 
 
     abstract fun populateAd()
-    abstract fun showShimmerLayout()
+    abstract fun showShimmerLayout(shimmer: ShimmerInfo?, activity: Activity)
     abstract fun loadAd()
 
 }

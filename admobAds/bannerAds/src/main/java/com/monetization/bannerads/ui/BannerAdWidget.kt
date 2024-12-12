@@ -134,9 +134,9 @@ class BannerAdWidget @JvmOverloads constructor(
     }
 
 
-    override fun showShimmerLayout() {
+    override fun showShimmerLayout(shimmer: ShimmerInfo?, activity: Activity) {
         try {
-            val info = shimmerInfo
+            val info = shimmer ?: shimmerInfo
             val shimmerLayout = LayoutInflater.from(activity)
                 .inflate(com.monetization.core.R.layout.shimmer, null, false)
                 ?.findViewById<ShimmerFrameLayout>(com.monetization.core.R.id.shimmerRoot)

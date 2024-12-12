@@ -7,6 +7,7 @@ enum class MessagesType {
     ShowingNotAllowed,
     NullActivityRef,
     AdLoadFailed,
+    AdShownFailed,
     NotEnoughTimeForInstantAd,
     AdLoadedButNoListeners,
     InstantTimeEnd,

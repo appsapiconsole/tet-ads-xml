@@ -89,11 +89,17 @@ object AdsCommons {
 
             override fun onAdShownFailed(adKey: String) {
                 super.onAdShownFailed(adKey)
+                if (adType == AdType.AppOpen) {
+                    showBlackBg?.invoke(false)
+                } else if (adType == AdType.REWARDED_INTERSTITIAL || adType == AdType.REWARDED) {
+                    onRewarded?.invoke(false)
+                }
+                onFreeAd.invoke(MessagesType.AdShownFailed, false)
                 uiAdsListener?.onFullScreenAdShownFailed(adKey)
             }
 
             override fun onAdDismiss(adKey: String, adShown: Boolean, rewardEarned: Boolean) {
-                if (adType == AdType.AppOpen) {
+                if (adType == AdType.AppOpen && adShown) {
                     showBlackBg?.invoke(false)
                 } else if (adType == AdType.REWARDED_INTERSTITIAL || adType == AdType.REWARDED) {
                     onRewarded?.invoke(rewardEarned)

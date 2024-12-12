@@ -3,6 +3,7 @@ package com.monetization.core.managers
 interface FullScreenAdsShowListener {
     fun onAdDismiss(adKey: String, adShown: Boolean = false, rewardEarned: Boolean = false) {}
     fun onAdShown(adKey: String) {}
+    fun onAdImpression(adKey: String) {}
     fun onAdLoaded(adKey: String) {}
     fun splashAdOnPause() {}
     fun splashAdOnResume() {}

@@ -9,6 +9,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.ad_units.core.AdUnit
 import com.monetization.core.controllers.AdsControllerBaseHelper
+import com.monetization.core.controllers.ControllerState
 import com.monetization.core.listeners.ControllersListener
 import com.monetization.core.managers.AdsLoadingStatusListener
 import com.monetization.core.provider.ad_request.AdRequestProvider
@@ -118,10 +119,7 @@ class AdmobBannerAdsController(
 
     override fun destroyAd(activity: Activity?) {
         currentBannerAd = null
-    }
-
-    override fun isAdAvailable(): Boolean {
-        return currentBannerAd != null
+        setControllerState(ControllerState.NoAdAvailable)
     }
 
     override fun getAvailableAd(): AdUnit? {

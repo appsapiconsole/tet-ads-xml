@@ -11,6 +11,7 @@ import com.monetization.core.managers.AdsLoadingStatusListener
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.ad_units.core.AdUnit
 import com.monetization.core.commons.AdsCommons.logAds
+import com.monetization.core.controllers.ControllerState
 import com.monetization.core.listeners.ControllersListener
 import com.monetization.core.provider.ad_request.AdRequestProvider
 import com.monetization.core.provider.ad_request.DefaultAdRequestProvider
@@ -79,11 +80,9 @@ class AdmobInterstitialAdsController(
     override fun destroyAd(activity: Activity?) {
         logAds("Inter Ad(${getAdKey()}) Destroyed,Id=${getAdId()}", true)
         currentInterstitialAd = null
+        setControllerState(ControllerState.NoAdAvailable)
     }
 
-    override fun isAdAvailable(): Boolean {
-        return currentInterstitialAd != null
-    }
 
     override fun getAvailableAd(): AdUnit? {
         return currentInterstitialAd

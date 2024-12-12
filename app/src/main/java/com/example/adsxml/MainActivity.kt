@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-import com.example.adsxml.base.BaseApp
 import com.example.adsxml.databinding.ActivityMainBinding
 import com.monetization.adsmain.commons.addNewController
 import com.monetization.adsmain.commons.sdkBannerAd
@@ -23,6 +22,7 @@ import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
 import com.monetization.interstitials.AdmobInterstitialAdsManager
 import com.monetization.interstitials.extensions.InstantInterstitialAdsManager
+import com.monetization.nativeads.AdmobNativeAdsManager
 import com.remote.firebaseconfigs.RemoteCommons.toConfigString
 import com.remote.firebaseconfigs.SdkRemoteConfigController
 import com.remote.firebaseconfigs.listeners.SdkConfigListener
@@ -39,17 +39,31 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        (BaseApp.appContext as BaseApp).showAppOpenAd()
-
         AdmobInterstitialAdsManager.addNewController(
             "Splash", listOf("")
+        )
+        AdmobNativeAdsManager.addNewController(
+            "Native", listOf("")
         )
         AdmobAppOpenAdsManager.addNewController(
             "AppOpen", listOf("")
         )
         binding.adFrame.canRefreshAdView(false)
+        binding.showShimmer.setOnClickListener {
+            binding.adFrame.showShimmerView(
+                shimmer = ShimmerInfo.ShimmerByView(
+                    layoutView = com.monetization.nativeads.R.layout.small_native_ad.resToView(
+                        this@MainActivity
+                    ),
+                    addInAShimmerView = true
+
+                ),
+                activity = this@MainActivity,
+                true
+            )
+        }
         binding.showAd.setOnClickListener {
+//            showNativeAd()
             showCounterAd {
                 startActivity(Intent(this@MainActivity, MainActivity::class.java))
             }
@@ -86,7 +100,7 @@ class MainActivity : ComponentActivity() {
         FullScreenAdsShowManager.showFullScreenAd(
             placementKey = true.toConfigString(),
             key = "Splash",
-            requestNewIfAdShown = true,
+            requestNewIfAdShown = false,
             normalLoadingTime = 0,
             instantLoadingTime = 10000,
             onAdDismiss = { it, msg ->
@@ -104,6 +118,25 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showNativeAd() {
+        com.monetization.nativeads.R.layout.large_native_ad
+        binding.adFrame.sdkNativeAdd(
+            adLayout = LayoutInfo.LayoutByName("large_native_ad"),
+            adKey = "Native",
+            placementKey = true.toConfigString(),
+            showNewAdEveryTime = true,
+            showShimmerLayout = ShimmerInfo.GivenLayout(),
+            lifecycle = lifecycle,
+            requestNewOnShow = false,
+            listener = object : UiAdsListener {
+                override fun onAdClicked(key: String) {
+                    super.onAdClicked(key)
+                }
+            },
+            activity = this
+        )
+    }
+
+    private fun showLightDarkMode() {
         val view = R.layout.small_native_ad_main.resToView(this)
         val ctaBtn = view?.findViewById<AppCompatButton>(R.id.ad_call_to_action)
         ctaBtn?.setTextColor(ContextCompat.getColor(this, R.color.red))

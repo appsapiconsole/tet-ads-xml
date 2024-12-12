@@ -26,32 +26,34 @@ class AdmobRewardedInterAd(
             override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                 super.onAdFailedToShowFullScreenContent(p0)
                 AdsCommons.isFullScreenAdShowing = false
-                AdmobRewardedInterAdsManager.getAdController(adKey)?.destroyAd(activity)
-                callBack.onAdDismiss(adKey)
+                controller?.onFailToShow()
+                callBack.onAdShownFailed(adKey)
             }
 
             override fun onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent()
                 AdmobRewardedInterAdsManager.getAdController(adKey)?.destroyAd(activity)
+                controller?.onAdShown()
                 callBack.onAdShown(adKey)
             }
 
             override fun onAdClicked() {
                 super.onAdClicked()
-                callBack.onAdClick(adKey)
                 controller?.onAdClick()
+                callBack.onAdClick(adKey)
             }
 
             override fun onAdImpression() {
                 super.onAdImpression()
                 controller?.onImpression()
+                callBack.onAdImpression(adKey)
             }
 
             override fun onAdDismissedFullScreenContent() {
                 super.onAdDismissedFullScreenContent()
                 AdsCommons.isFullScreenAdShowing = false
-                callBack.onAdDismiss(adKey = adKey, adShown = true, rewardEarned = rewardEarned)
                 controller?.onDismissed()
+                callBack.onAdDismiss(adKey = adKey, adShown = true, rewardEarned = rewardEarned)
             }
         }
         rewardedInter.show(

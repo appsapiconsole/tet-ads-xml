@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.monetization.core.ad_units.core.AdType
@@ -91,9 +92,7 @@ class NativeAdWidget @JvmOverloads constructor(
             val layout = view.inflateLayoutByLayoutInfo(activity!!)
             val admobNativeView = layout.findViewById<AdmobNativeView>(R.id.adView)
             logAds(
-                "populateNativeAd(${activity?.localClassName?.substringAfterLast(".")}) " +
-                        ",Ad Ok=${adUnit != null}," +
-                        "Layout Ok=${layout != null},Native View Ok=${admobNativeView != null}"
+                "populateNativeAd(${activity?.localClassName?.substringAfterLast(".")}) " + ",Ad Ok=${adUnit != null}," + "Layout Ok=${layout != null},Native View Ok=${admobNativeView != null}"
             )
             removeAllViews()
             layout.parent?.let { parent ->
@@ -129,76 +128,133 @@ class NativeAdWidget @JvmOverloads constructor(
         }
     }
 
-    override fun showShimmerLayout() {
-        try {
-            val info = shimmerInfo
-            val shimmerLayout = LayoutInflater.from(activity)
-                .inflate(com.monetization.core.R.layout.shimmer, null, false)
-                ?.findViewById<ShimmerFrameLayout>(com.monetization.core.R.id.shimmerRoot)
-            val shimmerView: View? = when (info) {
-                is ShimmerInfo.GivenLayout -> {
-                    val adLayout = layoutView?.inflateLayoutByLayoutInfo(activity!!)
-                    if (info.shimmerColor != null) {
-                        (listOf(
-                            adLayout?.findViewById<View?>(R.id.ad_headline),
-                            adLayout?.findViewById<View?>(R.id.ad_body),
-                            adLayout?.findViewById<View?>(R.id.tv_ad),
-                            adLayout?.findViewById<View?>(R.id.ad_app_icon),
-                            adLayout?.findViewById<View?>(R.id.ad_media),
-                            adLayout?.findViewById<View?>(R.id.ad_call_to_action),
-                        ) + (info.idsToChangeColor).mapNotNull {
-                            adLayout?.findViewById(it)
-                        }).forEach {
-                            it?.setBackgroundColor(
-                                try {
-                                    Color.parseColor(info.shimmerColor)
-                                } catch (_: Exception) {
-                                    logAds(
-                                        "Bad Shimmer Color !!!!!!!!!!! : ${info.shimmerColor}",
-                                        true
-                                    )
-                                    ContextCompat.getColor(context, R.color.shimmercolor)
+    override fun showShimmerLayout(shimmer: ShimmerInfo?, activity: Activity) {
+//        try {
+        val info: ShimmerInfo = shimmer ?: shimmerInfo
+        val shimmerLayout = LayoutInflater.from(activity)
+            .inflate(com.monetization.core.R.layout.shimmer, null, false)
+            ?.findViewById<ShimmerFrameLayout>(com.monetization.core.R.id.shimmerRoot)
+        val shimmerView: View? = when (info) {
+            is ShimmerInfo.GivenLayout -> {
+                val adLayout = layoutView?.inflateLayoutByLayoutInfo(activity)
+                if (info.shimmerColor != null) {
+                    val ids = (listOf(
+                        R.id.ad_headline,
+                        R.id.ad_body,
+                        R.id.tv_ad,
+                        R.id.ad_app_icon,
+                        R.id.ad_media,
+                        R.id.ad_call_to_action,
+                    ) + info.idsToChangeColor).filter {
+                        info.idsToExclude.contains(it).not()
+                    }.map {
+                        adLayout?.findViewById<View?>(it)
+                    }
+                    ids.forEach {
+                        if (it is TextView) {
+                            if (info.removeTextAdSpaced) {
+                                var text = ""
+                                repeat(it.text.length) {
+                                    text += " "
                                 }
-                            )
-                        }
-                    }
-                    shimmerLayout?.removeViewsFromIt()
-                    shimmerLayout?.addView(adLayout)
-                    shimmerLayout
-                }
-
-                is ShimmerInfo.ShimmerByView -> {
-                    if (info.addInAShimmerView) {
-                        info.layoutView?.let { view ->
-                            try {
-                                (view.parent as? ViewGroup)?.removeView(view)
-                                shimmerLayout?.removeViewsFromIt()
-                                shimmerLayout?.addView(view)
-                                shimmerLayout
-                            } catch (e: Exception) {
-                                null
+                                it.text = text
                             }
-                        } ?: run { null }
-                    } else {
-                        info.layoutView
+                        }
+                        it?.setBackgroundColor(
+                            try {
+                                Color.parseColor(info.shimmerColor)
+                            } catch (_: Exception) {
+                                logAds(
+                                    "Bad Shimmer Color !!!!!!!!!!! : ${info.shimmerColor}", true
+                                )
+                                ContextCompat.getColor(context, R.color.shimmercolor)
+                            }
+                        )
                     }
                 }
+                shimmerLayout?.removeViewsFromIt()
+                shimmerLayout?.addView(adLayout)
+                shimmerLayout
+            }
 
-                ShimmerInfo.None -> {
-                    null
+            is ShimmerInfo.ShimmerByView -> {
+                if (info.addInAShimmerView) {
+                    info.layoutView?.let { view ->
+                        try {
+                            (view.parent as? ViewGroup)?.removeView(view)
+                            if (info.shimmerColor.isNullOrBlank().not()) {
+                                val ids = (listOf(
+                                    R.id.ad_headline,
+                                    R.id.ad_body,
+                                    R.id.tv_ad,
+                                    R.id.ad_app_icon,
+                                    R.id.ad_media,
+                                    R.id.ad_call_to_action,
+                                ) + info.idsToChangeColor).filter {
+                                    info.idsToExclude.contains(it).not()
+                                }.mapNotNull {
+                                    view.findViewById<View?>(it)
+                                }
+                                ids.forEach {
+                                    if (it is TextView) {
+                                        if (info.removeTextAdSpaced) {
+                                            var text = ""
+                                            repeat(it.text.length) {
+                                                text += " "
+                                            }
+                                            it.text = text
+                                        }
+                                    }
+                                    it?.setBackgroundColor(
+                                        try {
+                                            Color.parseColor(info.shimmerColor)
+                                        } catch (_: Exception) {
+                                            logAds(
+                                                "Bad Shimmer Color !!!!!!!!!!! : ${info.shimmerColor}",
+                                                true
+                                            )
+                                            ContextCompat.getColor(context, R.color.shimmercolor)
+                                        }
+                                    )
+                                }
+                            }
+
+                            shimmerLayout?.removeViewsFromIt()
+                            shimmerLayout?.addView(view)
+                            shimmerLayout
+                        } catch (e: Exception) {
+                            logAds(
+                                "ShimmerByView crashes when adding our view for shimmer in shimmer, ${e.message}",
+                                true
+                            )
+                            null
+                        }
+                    } ?: run {
+                        logAds("info.layoutView is null in show shimmer", true)
+                        null
+                    }
+                } else {
+                    info.layoutView
                 }
             }
-            removeAllViews()
-            if (shimmerView != null) {
-                try {
-                    addView(shimmerView)
-                } catch (_: Exception) {
 
-                }
+            ShimmerInfo.None -> {
+                null
             }
-        } catch (e: Exception) {
-            logAds("showShimmerLayout Native=$key Exception=${e.message}", true)
         }
+        removeAllViews()
+        if (shimmerView != null) {
+            try {
+                logAds("Adding Shimmer view in widget")
+                addView(shimmerView)
+            } catch (e: Exception) {
+                logAds("At final point when adding shimmer in widget it crashed\n${e.message}")
+            }
+        } else {
+            logAds("At final point Provided shimmer view is null")
+        }/*} catch (e: Exception) {
+            logAds("showShimmerLayout Native=$key Exception=${e.message}", true)
+        }*/
     }
 
     fun refreshAd(refreshAdInfo: RefreshAdInfo) {

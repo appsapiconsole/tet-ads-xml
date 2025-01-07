@@ -1,24 +1,19 @@
 package com.monetization.adsmain.showRates.full_screen_ads
 
 enum class AdShowOptions {
-    InstantAd,
-    ShowOnlyIfAvailable,
+    ShowIfAvailable,
     InstantIfRequesting,
-    InstantIfNotAvailable,
+    Instant,
 }
 
 fun Boolean.toInstantAd(): AdShowOptions {
-    return AdShowOptions.InstantAd
+    return AdShowOptions.Instant
 }
 
 fun Boolean.toPreloadAd(): AdShowOptions {
-    return AdShowOptions.ShowOnlyIfAvailable
+    return AdShowOptions.ShowIfAvailable
 }
 
 fun Boolean.toInstantAdIfAlreadyRequesting(): AdShowOptions {
     return AdShowOptions.InstantIfRequesting
-}
-
-fun Boolean.toInstantAdIfNotAvailable(): AdShowOptions {
-    return AdShowOptions.InstantIfNotAvailable
 }

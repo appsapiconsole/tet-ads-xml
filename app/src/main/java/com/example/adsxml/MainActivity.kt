@@ -109,7 +109,7 @@ class MainActivity : ComponentActivity() {
             },
             activity = this@MainActivity,
             adType = AdType.INTERSTITIAL,
-            showOptions = AdShowOptions.InstantAd
+            showOptions = AdShowOptions.Instant
         )
     }
 

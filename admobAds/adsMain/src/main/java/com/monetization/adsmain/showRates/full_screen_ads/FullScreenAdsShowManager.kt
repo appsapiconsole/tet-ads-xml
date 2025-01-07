@@ -17,12 +17,46 @@ import com.monetization.interstitials.extensions.counter.PreloadCounterInterAdsM
 
 object FullScreenAdsShowManager {
 
+
     fun showFullScreenAd(
         placementKey: String,
         key: String,
         onAdDismiss: (Boolean, MessagesType?) -> Unit,
         activity: Activity,
-        showOptions: AdShowOptions = AdShowOptions.ShowOnlyIfAvailable,
+        isInstantAd: Boolean = false,
+        uiAdsListener: UiAdsListener? = null,
+        adType: AdType,
+        requestNewIfNotAvailable: Boolean = false,
+        requestNewIfAdShown: Boolean = false,
+        normalLoadingTime: Long = 1_000,
+        instantLoadingTime: Long = 8_000,
+        counterKey: String? = null,
+        onRewarded: ((Boolean) -> Unit)? = null,
+        onCounterUpdate: ((Int) -> Unit)? = null,
+    ) {
+        showFullScreenAd(
+            placementKey = placementKey,
+            key = key,
+            onAdDismiss = onAdDismiss,
+            activity = activity,
+            isInstantAd = true,
+            uiAdsListener = uiAdsListener,
+            adType = adType,
+            requestNewIfNotAvailable = requestNewIfNotAvailable,
+            requestNewIfAdShown = requestNewIfAdShown,
+            normalLoadingTime = normalLoadingTime,
+            instantLoadingTime = instantLoadingTime,
+            counterKey = counterKey,
+            onRewarded = onRewarded,
+            onCounterUpdate = onCounterUpdate,
+        )
+    }
+    fun showFullScreenAd(
+        placementKey: String,
+        key: String,
+        onAdDismiss: (Boolean, MessagesType?) -> Unit,
+        activity: Activity,
+        showOptions: AdShowOptions = AdShowOptions.ShowIfAvailable,
         uiAdsListener: UiAdsListener? = null,
         adType: AdType,
         requestNewIfNotAvailable: Boolean = false,
@@ -34,11 +68,7 @@ object FullScreenAdsShowManager {
         onCounterUpdate: ((Int) -> Unit)? = null,
     ) {
         val isInstantAd = when (showOptions) {
-            AdShowOptions.InstantAd -> {
-                true
-            }
-
-            AdShowOptions.ShowOnlyIfAvailable -> {
+            AdShowOptions.ShowIfAvailable -> {
                 false
             }
 
@@ -46,7 +76,7 @@ object FullScreenAdsShowManager {
                 key.getAdController(adType)?.isAdRequesting()
             }
 
-            AdShowOptions.InstantIfNotAvailable -> {
+            AdShowOptions.Instant -> {
                 key.getAdController(adType)?.isAdAvailable()?.not()
             }
         } ?: false

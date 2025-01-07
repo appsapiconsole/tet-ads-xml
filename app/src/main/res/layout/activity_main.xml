@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -16,7 +17,8 @@
     <com.monetization.adsmain.widgets.AdsUiWidget
         android:id="@+id/adFrame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:fun_ad_Key="Hi"/>
 
     <View
         android:layout_width="match_parent"
@@ -45,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show" />
+
     <Button
         android:id="@+id/showShimmer"
         android:layout_width="wrap_content"

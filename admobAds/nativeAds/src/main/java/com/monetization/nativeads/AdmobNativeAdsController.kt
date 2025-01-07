@@ -24,6 +24,7 @@ class AdmobNativeAdsController(
     listener: ControllersListener? = null,
     private val adRequestProvider: AdRequestProvider = DefaultAdRequestProvider(),
     private val nativeAdOptions: NativeOptionsProvider = DefaultNativeOptionsProvider(),
+    private val backgroundRequestEnabled: Boolean = true
 ) : AdsControllerBaseHelper(adKey, AdType.NATIVE, adIdsList, listener) {
 
     private var currentNativeAd: AdmobNativeAd? = null
@@ -60,42 +61,56 @@ class AdmobNativeAdsController(
                 val adSourceInstanceName: String? = loadedAdapterResponseInfo?.adSourceInstanceName
                 val adSourceInstanceId: String? = loadedAdapterResponseInfo?.adSourceInstanceId
                 val extras: Bundle? = nativeAd.responseInfo?.responseExtras
-                onAdRevenue(
-                    value = paidListener.valueMicros,
-                    currencyCode = paidListener.currencyCode,
-                    precisionType = paidListener.precisionType,
-                    adSourceName = adSourceName,
-                    adSourceId = adSourceId,
-                    adSourceInstanceName = adSourceInstanceName,
-                    adSourceInstanceId = adSourceInstanceId,
-                    extras = extras
-                )
+
+                CoroutineScope(Dispatchers.Main).launch {
+                    onAdRevenue(
+                        value = paidListener.valueMicros,
+                        currencyCode = paidListener.currencyCode,
+                        precisionType = paidListener.precisionType,
+                        adSourceName = adSourceName,
+                        adSourceId = adSourceId,
+                        adSourceInstanceName = adSourceInstanceName,
+                        adSourceInstanceId = adSourceInstanceId,
+                        extras = extras
+                    )
+                }
             }
             CoroutineScope(Dispatchers.Main).launch {
-
                 onLoaded(mediationClassName = nativeAd.responseInfo?.mediationAdapterClassName)
             }
 
-        }
-            .withAdListener(object : com.google.android.gms.ads.AdListener() {
-                override fun onAdFailedToLoad(error: com.google.android.gms.ads.LoadAdError) {
-                    currentNativeAd = null
+        }.withAdListener(object : com.google.android.gms.ads.AdListener() {
+            override fun onAdFailedToLoad(error: com.google.android.gms.ads.LoadAdError) {
+                currentNativeAd = null
+                CoroutineScope(Dispatchers.Main).launch {
                     onAdFailed(error)
                 }
+            }
 
-                override fun onAdImpression() {
-                    super.onAdImpression()
+            override fun onAdImpression() {
+                super.onAdImpression()
+                CoroutineScope(Dispatchers.Main).launch {
                     onImpression()
                 }
+            }
 
-                override fun onAdClicked() {
-                    super.onAdClicked()
+            override fun onAdClicked() {
+                super.onAdClicked()
+                CoroutineScope(Dispatchers.Main).launch {
                     onAdClick()
                 }
-            }).withNativeAdOptions(
-                nativeAdOptionsProvider.getNativeAdOptions()
-            ).build()
-        adLoader.loadAd(adRequestProvider.getAdRequest())
+            }
+        }).withNativeAdOptions(
+            nativeAdOptionsProvider.getNativeAdOptions()
+        ).build()
+        val dispatcher = if (backgroundRequestEnabled) {
+            Dispatchers.IO
+        } else {
+            Dispatchers.Main
+        }
+        CoroutineScope(dispatcher).launch {
+            adLoader.loadAd(adRequestProvider.getAdRequest())
+        }
         onAdRequested()
     }
 

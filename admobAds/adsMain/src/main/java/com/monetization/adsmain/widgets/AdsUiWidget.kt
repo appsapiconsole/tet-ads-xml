@@ -19,6 +19,7 @@ import com.monetization.core.ui.AdsWidgetData
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
 import com.monetization.nativeads.ui.NativeAdWidget
+import video.downloader.adsmain.R
 
 class AdsUiWidget @JvmOverloads constructor(
     context: Context,
@@ -26,9 +27,29 @@ class AdsUiWidget @JvmOverloads constructor(
     defStyleAttr: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr), DefaultLifecycleObserver {
 
+    private var funAdKey: String? = null
+
     init {
         logAds("AdWidget called", true)
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.AdsUiWidget,
+            defStyleAttr,
+            0
+        ).apply {
+            try {
+                funAdKey = getString(R.styleable.AdsUiWidget_fun_ad_Key)
+                logAds("Placement Key = $funAdKey")
+            } finally {
+                recycle()
+            }
+        }
     }
+
+    fun getFunAdKey(): String? {
+        return funAdKey
+    }
+
 
     private var nativeWidget: NativeAdWidget =
         NativeAdWidget(context, attrs, defStyleAttr)

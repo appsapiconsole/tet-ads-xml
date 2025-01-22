@@ -39,7 +39,11 @@ object FullScreenAdsShowManager {
             key = key,
             onAdDismiss = onAdDismiss,
             activity = activity,
-            isInstantAd = true,
+            showOptions = if (isInstantAd) {
+                AdShowOptions.Instant
+            } else {
+                AdShowOptions.ShowIfAvailable
+            },
             uiAdsListener = uiAdsListener,
             adType = adType,
             requestNewIfNotAvailable = requestNewIfNotAvailable,
@@ -51,6 +55,7 @@ object FullScreenAdsShowManager {
             onCounterUpdate = onCounterUpdate,
         )
     }
+
     fun showFullScreenAd(
         placementKey: String,
         key: String,

@@ -7,6 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.example.adsxml.databinding.ActivityMainBinding
+import com.example.adsxml.pager.ViewPagerActivity
 import com.monetization.adsmain.commons.addNewController
 import com.monetization.adsmain.commons.sdkBannerAd
 import com.monetization.adsmain.commons.sdkNativeAdd
@@ -50,6 +51,11 @@ class MainActivity : ComponentActivity() {
             "AppOpen", listOf("")
         )
         binding.adFrame.canRefreshAdView(false)
+        binding.move.setOnClickListener {
+            startActivity(
+                Intent(this, ViewPagerActivity::class.java)
+            )
+        }
         binding.showShimmer.setOnClickListener {
             binding.adFrame.showShimmerView(
                 shimmer = ShimmerInfo.ShimmerByView(
@@ -64,15 +70,9 @@ class MainActivity : ComponentActivity() {
             )
         }
         binding.showAd.setOnClickListener {
-//            showNativeAd()
             showCounterAd {
                 startActivity(Intent(this@MainActivity, MainActivity::class.java))
             }
-            /*showSplashAd {
-                startActivity(
-                    Intent(this@MainActivity, ComposeActivity::class.java)
-                )
-            }*/
         }
 
     }

@@ -56,7 +56,7 @@ class BannerAdWidget @JvmOverloads constructor(
     }
 
     override fun loadAd() {
-        (adsController as? AdmobBannerAdsController)?.loadAd(
+        (getController() as? AdmobBannerAdsController)?.loadAd(
             activity = activity!!,
             calledFrom = "Base Banner Activity",
             placementKey = placementKey,
@@ -103,12 +103,12 @@ class BannerAdWidget @JvmOverloads constructor(
         adUnit?.let {
             (it as? AdmobBannerAd)?.populateAd(activity!!, this, onPopulated = {
                 if (oneTimeUse) {
-                    adsController?.destroyAd(activity!!)
+                    getController()?.destroyAd(activity!!)
                     if (bannerRefreshed) {
                         return@populateAd
                     }
                     if (requestNewOnShow) {
-                        (adsController as AdmobBannerAdsController).loadAd(
+                        (getController() as AdmobBannerAdsController).loadAd(
                             activity = activity!!,
                             calledFrom = "",
                             callback = null,

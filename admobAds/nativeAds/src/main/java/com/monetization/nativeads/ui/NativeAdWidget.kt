@@ -3,6 +3,8 @@ package com.monetization.nativeads.ui
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +17,7 @@ import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.commons.NativeConstants.inflateLayoutByLayoutInfo
 import com.monetization.core.commons.NativeConstants.removeViewsFromIt
 import com.monetization.core.listeners.UiAdsListener
+import com.monetization.core.managers.AdsLoadingStatusListener
 import com.monetization.core.models.RefreshAdInfo
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
@@ -35,7 +38,11 @@ class NativeAdWidget @JvmOverloads constructor(
     }
 
     private var layoutView: LayoutInfo? = null
+    private var isRepeatCheckingAllowed = true
 
+    fun setRepeatCheckingAllowed(check: Boolean) {
+        isRepeatCheckingAllowed = check
+    }
 
     fun showNativeAdmob(
         activity: Activity,
@@ -73,16 +80,34 @@ class NativeAdWidget @JvmOverloads constructor(
     }
 
     override fun loadAd() {
-        val listener = getAdsLoadingListener()
-        if (showFromHistory && adsController?.getHistory()?.isNotEmpty() == true) {
-            listener.onAdLoaded(key, adsController?.getMediationAdapterClassName())
+        val listener: AdsLoadingStatusListener = getAdsLoadingListener()
+        logAds("loadAd Called In Native Ad Widget placementKey=$placementKey,listener=${listener}")
+        if (showFromHistory && getController()?.getHistory()?.isNotEmpty() == true) {
+            listener.onAdLoaded(key, getController()?.getMediationAdapterClassName())
         } else {
-            (adsController as? AdmobNativeAdsController)?.loadAd(
+            val available = getController()?.isAdAvailable() ?: false
+            (getController() as? AdmobNativeAdsController)?.loadAd(
                 placementKey = placementKey,
                 activity = (activity!!),
                 calledFrom = "Base Native Activity",
                 callback = listener
             )
+            if (isRepeatCheckingAllowed && available.not()) {
+                repeatCheck(listener)
+            }
+        }
+    }
+
+    private fun repeatCheck(listener: AdsLoadingStatusListener?) {
+        if (listener != null) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                val available = getController()?.isAdAvailable()
+                if (available == true) {
+                    listener.onAdLoaded(key, getController()?.getMediationAdapterClassName())
+                } else {
+                    repeatCheck(listener)
+                }
+            }, 1000)
         }
     }
 
@@ -113,9 +138,9 @@ class NativeAdWidget @JvmOverloads constructor(
         layoutView?.let {
             showNativeAd(view = it, onShown = {
                 if (oneTimeUse) {
-                    adsController?.destroyAd(activity!!)
+                    getController()?.destroyAd(activity!!)
                     if (requestNewOnShow) {
-                        adsController?.loadAd(
+                        getController()?.loadAd(
                             placementKey = placementKey,
                             activity = activity!!,
                             calledFrom = "requestNewOnShow",

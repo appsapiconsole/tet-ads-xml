@@ -104,6 +104,10 @@ class AdsUiWidget @JvmOverloads constructor(
         }
     }
 
+    fun setRepeatCheckingAllowed(check: Boolean) {
+        nativeWidget.setRepeatCheckingAllowed(check)
+    }
+
     fun setWidgetKey(
         placementKey: String,
         adKey: String,
@@ -126,8 +130,8 @@ class AdsUiWidget @JvmOverloads constructor(
             ),
             placementKey.getRemoteAdWidgetModel(adKey, model)
         )
-        bannerWidget.setWidgetKey(placementKey)
-        nativeWidget.setWidgetKey(placementKey)
+        bannerWidget.setWidgetKey(key = placementKey)
+        nativeWidget.setWidgetKey(key = placementKey)
         adEnabled = enabled
         adsWidgetDataModel = widgetModel
         nativeWidget.setAdsWidgetData(

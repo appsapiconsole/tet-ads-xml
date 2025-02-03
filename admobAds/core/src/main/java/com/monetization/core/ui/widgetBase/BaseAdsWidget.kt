@@ -33,7 +33,9 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
 
     var adUnit: AdUnit? = null
     var lifecycle: Lifecycle? = null
-    var adsController: AdsController? = null
+
+    //    var adsController: AdsController? = null
+    private var controllerByPlacementKey = HashMap<String, AdsController?>()
     var isShowAdCalled = false
     var adPopulated = false
     var isLoadAdCalled = false
@@ -98,6 +100,7 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         showFromHistory: Boolean = false,
         refreshAdInfo: RefreshAdInfo = RefreshAdInfo()
     ) {
+        logAds("onShowAdCalled adKey=$adKey,adType=$adType")
         if (SdkConfigs.canShowAds(adKey, placementKey, adType).not()) {
             logAds("Ad Showing is restricted against key=$adKey for $adType", true)
             makeGone()
@@ -155,21 +158,20 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
             ) {
                 adOnFailed()
                 uiListener?.onAdFailed(
-                    key = adKey,
-                    msg = message,
-                    code = code,
-                    mediationClassName = mediationClassName
+                    key = adKey, msg = message, code = code, mediationClassName = mediationClassName
                 )
             }
         }
     }
 
+    fun getController() = controllerByPlacementKey?.get(placementKey)
+
     fun adOnLoaded() {
         adLoaded = true
-        adUnit = if (showFromHistory && adsController?.getHistory()?.isNotEmpty() == true) {
-            adsController?.getHistory()?.get(0)
+        adUnit = if (showFromHistory && getController()?.getHistory()?.isNotEmpty() == true) {
+            getController()?.getHistory()?.get(0)
         } else {
-            adsController?.getAvailableAd()
+            getController()?.getAvailableAd()
         }
         logAds(
             "${activity?.getGoodName()} Native=On Ad Loaded,Is Ad Ok=${adUnit != null}",
@@ -196,14 +198,15 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
 
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
-        logAds("CustomNativeView onPause  key=$key")
+        logAds("CustomNativeView onPause key=$key")
         addOnPause()
     }
 
     private fun addOnPause() {
         isLoadAdCalled = false
         isViewInPause = true
-        activity?.let { adsController?.resetListener(it) }
+        logAds(message = "Resetting Listener key=$key, Called In On Pause, placementKey=$placementKey", isError = true)
+        activity?.let { getController()?.resetListener(it) }
     }
 
 
@@ -226,10 +229,11 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
 
     private fun loadAdCalled(adsManager: AdsManager<T>) {
         isLoadAdCalled = true
-        adsController = adsManager.getAdController(key)
-        if (adsController == null) {
+        val controller = adsManager.getAdController(key)
+        controllerByPlacementKey[placementKey]=  controller
+        if (getController() == null) {
             makeGone()
-            logAds("Controller for $key, is not available", true)
+            logAds("Controller for $key, placementKey=${placementKey} is not available", true)
             uiListener?.onAdFailed(
                 key = key,
                 msg = "Controller for $key, is not available",

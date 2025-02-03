@@ -31,6 +31,12 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/move"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Move Next" />
+
+    <Button
         android:id="@+id/fetchConfig"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

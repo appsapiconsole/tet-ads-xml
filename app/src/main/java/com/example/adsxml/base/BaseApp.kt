@@ -64,7 +64,8 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
 
         SdkConfigs.setRemoteConfigsListener(object : RemoteConfigsProvider {
             override fun isAdEnabled(placementKey: String, adKey: String, adType: AdType): Boolean {
-                return SdkRemoteConfigController.getRemoteConfigBoolean(placementKey)
+//                return SdkRemoteConfigController.getRemoteConfigBoolean(placementKey)
+                return true
             }
 
             override fun getAdWidgetData(placementKey: String, adKey: String): AdsWidgetData? {

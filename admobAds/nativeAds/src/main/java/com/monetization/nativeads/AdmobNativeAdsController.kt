@@ -61,7 +61,6 @@ class AdmobNativeAdsController(
                 val adSourceInstanceName: String? = loadedAdapterResponseInfo?.adSourceInstanceName
                 val adSourceInstanceId: String? = loadedAdapterResponseInfo?.adSourceInstanceId
                 val extras: Bundle? = nativeAd.responseInfo?.responseExtras
-
                 CoroutineScope(Dispatchers.Main).launch {
                     onAdRevenue(
                         value = paidListener.valueMicros,
@@ -76,7 +75,9 @@ class AdmobNativeAdsController(
                 }
             }
             CoroutineScope(Dispatchers.Main).launch {
-                onLoaded(mediationClassName = nativeAd.responseInfo?.mediationAdapterClassName)
+                onLoaded(
+                    mediationClassName = nativeAd.responseInfo?.mediationAdapterClassName
+                )
             }
 
         }.withAdListener(object : com.google.android.gms.ads.AdListener() {

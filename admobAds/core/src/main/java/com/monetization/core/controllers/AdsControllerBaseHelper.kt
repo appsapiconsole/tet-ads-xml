@@ -190,7 +190,7 @@ abstract class AdsControllerBaseHelper(
             dataMap = customDataMap,
             mediationClassName
         )
-        logAds("$adType Ad Loaded,Key=$adKey,id=$latestAdIdRequested")
+        logAds("$adType Ad Loaded,Key=$adKey,id=$latestAdIdRequested,Listener=${loadingStateListener}")
     }
 
     fun onAdRevenue(

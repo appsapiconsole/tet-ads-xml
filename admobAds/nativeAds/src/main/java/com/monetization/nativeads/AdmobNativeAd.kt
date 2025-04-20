@@ -63,8 +63,8 @@ class AdmobNativeAd(
                     getNativeAdView()?.let { nativeAdView ->
                         val adHeadLine: TextView? = findViewById(R.id.ad_headline)
                         val adBody: TextView? = findViewById(R.id.ad_body)
-                        val mediaView: AdmobNativeMediaView? = findViewById(R.id.ad_media)
                         val adCtaBtn: TextView? = findViewById(R.id.ad_call_to_action)
+                        val mediaView: AdmobNativeMediaView? = findViewById(R.id.ad_media)
                         val addAttrTextView: TextView? = findViewById(R.id.addAttr)
                         val mIconView = nativeAdView.findViewById<ImageView>(R.id.ad_app_icon)
                         val mMedia = mediaView?.getMediaView()

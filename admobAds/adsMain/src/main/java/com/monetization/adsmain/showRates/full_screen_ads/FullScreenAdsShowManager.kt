@@ -78,11 +78,11 @@ object FullScreenAdsShowManager {
             }
 
             AdShowOptions.InstantIfRequesting -> {
-                key.getAdController(adType)?.isAdRequesting()
+                key.getAdController()?.isAdRequesting()
             }
 
             AdShowOptions.Instant -> {
-                key.getAdController(adType)?.isAdAvailable()?.not()
+                key.getAdController()?.isAdAvailable()?.not()
             }
         } ?: false
         when (adType) {

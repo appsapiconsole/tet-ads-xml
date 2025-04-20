@@ -165,7 +165,7 @@ class AdsUiWidget @JvmOverloads constructor(
         showFromHistory: Boolean = false,
         listener: UiAdsListener? = null
     ) {
-        if (showOnlyIfAdAvailable && adKey.isAdAvailable(AdType.NATIVE).not()) {
+        if (showOnlyIfAdAvailable && adKey.isAdAvailable().not()) {
             logAds("Because No Ad Is Available Against key=$adKey", true)
             listener?.onAdFailed(
                 key = adKey,
@@ -203,7 +203,7 @@ class AdsUiWidget @JvmOverloads constructor(
         showOnlyIfAdAvailable: Boolean = true,
         listener: UiAdsListener? = null
     ) {
-        if (showOnlyIfAdAvailable && adKey.isAdAvailable(AdType.BANNER).not()) {
+        if (showOnlyIfAdAvailable && adKey.isAdAvailable().not()) {
             listener?.onAdFailed(
                 key = adKey,
                 msg = "Because No Ad Is Available Against key=$adKey",

@@ -2,7 +2,6 @@ package com.monetization.core.commons
 
 import android.app.Activity
 import android.util.Log
-import com.facebook.shimmer.BuildConfig
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.SdkConfigs.isTestMode
 import com.monetization.core.controllers.AdsController
@@ -11,8 +10,6 @@ import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.core.msgs.MessagesType
 
 object AdsCommons {
-
-    var isDebugMode = BuildConfig.DEBUG
 
     var adEnabledSdkString = "SDK_TRUE"
 

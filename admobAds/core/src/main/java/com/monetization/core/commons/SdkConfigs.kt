@@ -152,7 +152,7 @@ object SdkConfigs {
         } else if (disableAllAds) {
             logAds("All Ads Are Disabled by developer", true)
             return false
-        } else if (isAdManuallyBlockedForShow(adKey, adType)) {
+        } else if (isAdManuallyBlockedForShow(adKey = adKey, adType = adType)) {
             return false
         } else {
             return sdkListener?.canShowAd(

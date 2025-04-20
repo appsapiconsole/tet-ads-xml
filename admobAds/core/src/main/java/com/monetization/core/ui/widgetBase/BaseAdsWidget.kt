@@ -100,16 +100,17 @@ abstract class BaseAdsWidget<T : AdsControllerBaseHelper> @JvmOverloads construc
         showFromHistory: Boolean = false,
         refreshAdInfo: RefreshAdInfo = RefreshAdInfo()
     ) {
+        if (isForRefresh.not()) {
+            this.uiListener = listener
+        }
         logAds("onShowAdCalled adKey=$adKey,adType=$adType")
         if (SdkConfigs.canShowAds(adKey, placementKey, adType).not()) {
             logAds("Ad Showing is restricted against key=$adKey for $adType", true)
             makeGone()
+            this.uiListener?.onAdFailed(key,"Ad Showing is restricted against key=$adKey for $adType",-1,null)
             return
         }
         makeVisible()
-        if (isForRefresh.not()) {
-            this.uiListener = listener
-        }
         this.key = adKey
         this.showFromHistory = showFromHistory
         this.activity = activity

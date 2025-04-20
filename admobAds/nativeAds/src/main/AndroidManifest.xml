@@ -6,10 +6,10 @@
 
     <application>
 
-        <property
+        <!--<property
             android:name="android.adservices.AD_SERVICES_CONFIG"
             android:resource="@xml/gma_ad_services_config"
-            tools:replace="android:resource" />
+            tools:replace="android:resource" /> -->
 
     </application>
 </manifest>

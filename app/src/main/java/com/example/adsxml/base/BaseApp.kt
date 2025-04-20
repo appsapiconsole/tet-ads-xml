@@ -129,6 +129,7 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityPaused(p0: Activity) {
+        canShowAppOpenAd = false
     }
 
     override fun onActivityStopped(p0: Activity) {

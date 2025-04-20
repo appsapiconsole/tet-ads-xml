@@ -16,6 +16,7 @@ import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.controllers.AdsController
 import com.monetization.core.listeners.ControllersListener
 import com.monetization.core.managers.AdsLoadingStatusListener
+import com.monetization.core.managers.ControllersManager.getAllControllers
 import com.monetization.core.provider.ad_request.AdRequestProvider
 import com.monetization.core.provider.ad_request.DefaultAdRequestProvider
 import com.monetization.core.provider.nativeAds.DefaultNativeOptionsProvider
@@ -26,17 +27,16 @@ import com.monetization.nativeads.AdmobNativeAdsController
 import com.monetization.nativeads.AdmobNativeAdsManager
 
 
-fun String.isAdRequesting(adType: AdType): Boolean {
-    return getAdController(adType)?.isAdRequesting() ?: false
+fun String.isAdRequesting(): Boolean {
+    return getAdController()?.isAdRequesting() ?: false
 }
 
 fun String.loadAd(
     placementKey: String,
     activity: Activity,
-    adType: AdType,
     listener: AdsLoadingStatusListener? = null
 ) {
-    getAdController(adType)?.loadAd(placementKey, activity, "", listener)
+    getAdController()?.loadAd(placementKey, activity, "", listener)
 }
 
 fun String.errorLogging() {
@@ -48,27 +48,17 @@ fun String.errorLogging() {
                                     --$this--
                                     *********************************************************
                                     *********************************************************
-                                """.trimIndent(),
-        isError = true
+                                """.trimIndent(), isError = true
     )
 }
 
-fun String.destroyAd(adType: AdType, activity: Activity? = null) {
-    getAdController(adType)?.destroyAd(activity)
-}
-
-fun AdType.loadAd(
-    placementKey: String,
-    key: String,
-    activity: Activity,
-    listener: AdsLoadingStatusListener? = null
-) {
-    getAdController(key)?.loadAd(placementKey, activity, "", listener)
+fun String.destroyAd(activity: Activity? = null) {
+    getAdController()?.destroyAd(activity)
 }
 
 
-fun String.isAdAvailable(adType: AdType): Boolean {
-    return getAdController(adType)?.isAdAvailable() ?: false
+fun String.isAdAvailable(): Boolean {
+    return getAdController()?.isAdAvailable() ?: false
 }
 
 fun AdType.getAvailableAdsControllers(): List<AdsController> {
@@ -83,16 +73,12 @@ fun AdType.getAvailableOrRequestingControllers(): List<AdsController> {
     return getAllControllers().filter { it.isAdAvailableOrRequesting() }
 }
 
-fun String.isAdAvailableOrRequesting(adType: AdType): Boolean {
-    return getAdController(adType)?.isAdAvailableOrRequesting() ?: false
+fun String.isAdAvailableOrRequesting(): Boolean {
+    return getAdController()?.isAdAvailableOrRequesting() ?: false
 }
 
-fun String.getAdIdToRequest(adType: AdType): String? {
-    return getAdController(adType)?.getAdId()
-}
-
-fun String.getAdController(adType: AdType): AdsController? {
-    return adType.getAdController(this)
+fun String.getAdIdToRequest(): String? {
+    return getAdController()?.getAdId()
 }
 
 fun AdmobInterstitialAdsManager.addNewController(
@@ -132,8 +118,10 @@ fun addNewController(
         AdType.BANNER -> {
             bannerAdType?.let {
                 AdmobBannerAdsManager.addNewController(
-                    adKey = adKey, adIdsList = adIdsList,
-                    bannerAdType = it, listener = listener,
+                    adKey = adKey,
+                    adIdsList = adIdsList,
+                    bannerAdType = it,
+                    listener = listener,
                     adRequestProvider = adRequestProvider
                 )
             } ?: run {
@@ -194,10 +182,7 @@ fun AdmobAppOpenAdsManager.addNewController(
 ) {
     addNewController(
         controller = AdmobAppOpenAdsController(
-            adKey,
-            adIdsList,
-            listener,
-            adRequestProvider
+            adKey, adIdsList, listener, adRequestProvider
         )
     )
 }
@@ -209,10 +194,7 @@ fun AdmobRewardedAdsManager.addNewController(
 ) {
     addNewController(
         controller = AdmobRewardedAdsController(
-            adKey,
-            adIdsList,
-            listener,
-            adRequestProvider
+            adKey, adIdsList, listener, adRequestProvider
         )
     )
 }
@@ -226,18 +208,20 @@ fun AdmobRewardedInterAdsManager.addNewController(
 }
 
 
-fun AdType.getAdController(key: String): AdsController? {
-    val manager = when (this) {
-        AdType.NATIVE -> AdmobNativeAdsManager
-        AdType.INTERSTITIAL -> AdmobInterstitialAdsManager
-        AdType.REWARDED -> AdmobRewardedAdsManager
-        AdType.REWARDED_INTERSTITIAL -> AdmobRewardedInterAdsManager
-        AdType.BANNER -> AdmobBannerAdsManager
-        AdType.AppOpen -> AdmobAppOpenAdsManager
-    }
-    return manager.getAdController(key)
+fun String.updateAdIds(
+    ids: List<String>,
+) {
+    getAdController()?.updateAdIds(ids)
 }
 
+fun String.getAdController(): AdsController? =
+    getAllControllers().firstOrNull { it.getAdKey() == this }
+
+
+fun getAllNativeControllers() = AdType.NATIVE.getAllControllers()
+fun getAllBannerControllers() = AdType.BANNER.getAllControllers()
+fun getAllInterControllers() = AdType.INTERSTITIAL.getAllControllers()
+fun getAllAppOpenControllers() = AdType.AppOpen.getAllControllers()
 
 fun AdType.getAllControllers(): List<AdsController> {
     return when (this) {

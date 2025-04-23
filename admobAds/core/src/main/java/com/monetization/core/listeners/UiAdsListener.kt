@@ -2,7 +2,9 @@ package com.monetization.core.listeners
 
 interface UiAdsListener {
     fun onAdClicked(key: String) {}
+    fun onAdAboutToShow(key: String) {}
     fun onImpression(key: String) {}
+    fun onDismiss(key: String) {}
     fun onAdRequested(key: String) {}
     fun onAdPopulated(key: String) {}
     fun onRewarded(key: String) {}

@@ -21,7 +21,7 @@ interface AdsController {
     }
 
     fun resetListener(activity: Activity) {}
-    fun setControllerListener(listener: ControllersListener?) {}
+    fun setControllerListener(key: String, listener: ControllersListener?) {}
     fun setListener(activity: Activity, callback: AdsLoadingStatusListener) {}
     fun destroyAd(activity: Activity?) {}
     fun getAdKey(): String

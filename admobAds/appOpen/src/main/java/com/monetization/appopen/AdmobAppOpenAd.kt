@@ -4,12 +4,12 @@ import android.app.Activity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.appopen.AppOpenAd
-import com.monetization.core.controllers.AdsControllerBaseHelper
-import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.core.ad_units.GeneralInterOrAppOpenAd
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons
 import com.monetization.core.commons.AdsCommons.logAds
+import com.monetization.core.controllers.AdsControllerBaseHelper
+import com.monetization.core.managers.FullScreenAdsShowListener
 
 class AdmobAppOpenAd(
     val appOpenAd: AppOpenAd,
@@ -56,6 +56,7 @@ class AdmobAppOpenAd(
                 callBack.onAdDismiss(adKey, true)
             }
         }
+        callBack.onAdAboutToShow(adKey)
         appOpenAd.show(activity)
     }
 

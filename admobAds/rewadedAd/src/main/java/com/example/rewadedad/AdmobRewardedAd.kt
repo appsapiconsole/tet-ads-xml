@@ -59,6 +59,7 @@ class AdmobRewardedAd(
                 callBack.onAdDismiss(adKey, true, rewardEarned)
             }
         }
+        callBack.onAdAboutToShow(adKey)
         rewardedAd.show(
             activity
         ) {

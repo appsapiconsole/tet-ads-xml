@@ -40,7 +40,7 @@ abstract class AdsControllerBaseHelper(
     private var placementKey: String = ""
     private var adRequestCount = 0
 
-    private var controllerListener: ControllersListener? = null
+    private var controllerListener: HashMap<String, ControllersListener?> = hashMapOf()
 
     private var adInfo: AdmobAdInfo? = null
     private var latestAdIdRequested: String = ""
@@ -89,11 +89,11 @@ abstract class AdsControllerBaseHelper(
     }
 
     init {
-        this.controllerListener = listener
+        this.controllerListener[adKey] = listener
     }
 
-    override fun setControllerListener(listener: ControllersListener?) {
-        this.controllerListener = listener
+    override fun setControllerListener(key: String, listener: ControllersListener?) {
+        this.controllerListener[key] = listener
     }
 
 
@@ -131,32 +131,40 @@ abstract class AdsControllerBaseHelper(
         )
         addInAdHistory()
         loadingStateListener?.onAdRequested(adKey = adKey)
-        controllerListener?.onAdRequested(
-            adKey = adKey,
-            adType = adType,
-            placementKey = placementKey,
-            dataMap = customDataMap
-        )
+
+        controllerListener.forEach {
+            it.value?.onAdRequested(
+                adKey = adKey,
+                adType = adType,
+                placementKey = placementKey,
+                dataMap = customDataMap
+            )
+        }
         logAds("$adType Ad Requested,Key=$adKey,Id=$latestAdIdRequested")
     }
 
+
     fun onAdShown() {
-        controllerListener?.onAdShown(
-            adKey = adKey,
-            adType = adType,
-            placementKey = placementKey,
-            dataMap = customDataMap
-        )
+        controllerListener.forEach {
+            it.value?.onAdShown(
+                adKey = adKey,
+                adType = adType,
+                placementKey = placementKey,
+                dataMap = customDataMap
+            )
+        }
         logAds("$adType Ad Shown,Key=$adKey")
     }
 
     fun onAdClick() {
-        controllerListener?.onAdClicked(
-            adKey = adKey,
-            adType = adType,
-            placementKey = placementKey,
-            dataMap = customDataMap
-        )
+        controllerListener.forEach {
+            it.value?.onAdClicked(
+                adKey = adKey,
+                adType = adType,
+                placementKey = placementKey,
+                dataMap = customDataMap
+            )
+        }
         logAds("$adType Ad Clicked,Key=$adKey")
     }
 
@@ -165,12 +173,15 @@ abstract class AdsControllerBaseHelper(
             adImpressionTime = System.currentTimeMillis()
         )
         addInAdHistory()
-        controllerListener?.onAdImpression(
-            adKey = adKey,
-            adType = adType,
-            placementKey = placementKey,
-            dataMap = customDataMap
-        )
+
+        controllerListener.forEach {
+            it.value?.onAdImpression(
+                adKey = adKey,
+                adType = adType,
+                placementKey = placementKey,
+                dataMap = customDataMap
+            )
+        }
         logAds("$adType Ad Impression,Key=$adKey")
     }
 
@@ -183,13 +194,16 @@ abstract class AdsControllerBaseHelper(
         )
         addInAdHistory()
         loadingStateListener?.onAdLoaded(adKey, mediationClassName)
-        controllerListener?.onAdLoaded(
-            adKey = adKey,
-            adType = adType,
-            placementKey = placementKey,
-            dataMap = customDataMap,
-            mediationClassName
-        )
+
+        controllerListener.forEach {
+            it.value?.onAdLoaded(
+                adKey = adKey,
+                adType = adType,
+                placementKey = placementKey,
+                dataMap = customDataMap,
+                mediationClassName
+            )
+        }
         logAds("$adType Ad Loaded,Key=$adKey,id=$latestAdIdRequested,Listener=${loadingStateListener}")
     }
 
@@ -203,18 +217,20 @@ abstract class AdsControllerBaseHelper(
         adSourceInstanceId: String?,
         extras: Bundle?
     ) {
-        controllerListener?.onAdRevenue(
-            adKey = adKey,
-            adType = adType,
-            value = value,
-            currencyCode = currencyCode,
-            precisionType = precisionType,
-            adSourceName = adSourceName,
-            adSourceId = adSourceId,
-            adSourceInstanceName = adSourceInstanceName,
-            adSourceInstanceId = adSourceInstanceId,
-            extras = extras
-        )
+        controllerListener.forEach {
+            it.value?.onAdRevenue(
+                adKey = adKey,
+                adType = adType,
+                value = value,
+                currencyCode = currencyCode,
+                precisionType = precisionType,
+                adSourceName = adSourceName,
+                adSourceId = adSourceId,
+                adSourceInstanceName = adSourceInstanceName,
+                adSourceInstanceId = adSourceInstanceId,
+                extras = extras
+            )
+        }
         logAds("$adType Ad Revenue(value=$value,currency=$currencyCode,precision=$precisionType),Key=$adKey,id=$latestAdIdRequested")
     }
 
@@ -264,14 +280,16 @@ abstract class AdsControllerBaseHelper(
             "$adType Ad Failed To Load, msg=${error.message},code=$error, Key=$adKey,id=$latestAdIdRequested",
             true
         )
-        controllerListener?.onAdFailed(
-            adKey = adKey,
-            adType = adType,
-            message = error.message,
-            error = error.code,
-            placementKey = placementKey,
-            dataMap = customDataMap
-        )
+        controllerListener.forEach {
+            it.value?.onAdFailed(
+                adKey = adKey,
+                adType = adType,
+                message = error.message,
+                error = error.code,
+                placementKey = placementKey,
+                dataMap = customDataMap
+            )
+        }
     }
 
     private fun addInAdHistory() {
@@ -290,7 +308,7 @@ abstract class AdsControllerBaseHelper(
         if (isAdEnabled.not() || placementKey.isRemoteAdEnabled(adKey, adType).not()) {
             loadingStateListener?.onAdFailedToLoad(
                 adKey,
-                "${adType} Ad is not enabled",
+                "$adType Ad is not enabled",
                 -1,
                 null,
                 null

@@ -14,6 +14,11 @@ object AdsCommons {
     var adEnabledSdkString = "SDK_TRUE"
 
     var isFullScreenAdShowing = false
+
+    fun anyFullScreenAdIsShowing(): Boolean {
+        return isFullScreenAdShowing
+    }
+
     fun logAds(message: String, isError: Boolean = false) {
         if (isError) {
             Log.e("adsPlugin", "Admob Ads:$message")
@@ -69,6 +74,11 @@ object AdsCommons {
         onFreeAd: (MessagesType?, Boolean) -> Unit,
     ): FullScreenAdsShowListener {
         return object : FullScreenAdsShowListener {
+            override fun onAdAboutToShow(adKey: String) {
+                super.onAdAboutToShow(adKey)
+                uiAdsListener?.onAdAboutToShow(adKey)
+            }
+
             override fun onAdShown(adKey: String) {
                 super.onAdShown(adKey)
                 uiAdsListener?.onImpression(adKey)

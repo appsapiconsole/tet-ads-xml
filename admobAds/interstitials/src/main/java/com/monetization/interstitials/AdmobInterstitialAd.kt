@@ -62,6 +62,7 @@ class AdmobInterstitialAd(
                 callBack.onAdDismiss(adKey, true)
             }
         }
+        callBack.onAdAboutToShow(adKey)
         interstitialAds.show(activity)
     }
 

@@ -1,3 +1,4 @@
+/*
 package com.monetization.nativeads.ui
 
 import android.content.Context
@@ -16,8 +17,6 @@ class AdmobNativeView @JvmOverloads constructor(
 
     private var nativeAdView: NativeAdView? = null
 
-
-
     override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
         if (child == null) return
 
@@ -34,4 +33,4 @@ class AdmobNativeView @JvmOverloads constructor(
     fun getNativeAdView(): NativeAdView? {
         return nativeAdView
     }
-}
+}*/

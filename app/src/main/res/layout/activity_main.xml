@@ -55,6 +55,12 @@
         android:text="Show" />
 
     <Button
+        android:id="@+id/showNativeAd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Native" />
+
+    <Button
         android:id="@+id/showShimmer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

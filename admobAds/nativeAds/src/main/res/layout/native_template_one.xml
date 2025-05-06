@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-    <com.monetization.nativeads.ui.AdmobNativeView
+    <com.google.android.gms.ads.nativead.NativeAdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -67,7 +67,7 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <com.monetization.nativeads.ui.AdmobNativeMediaView
+            <com.google.android.gms.ads.nativead.MediaView
                 android:id="@+id/ad_media"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
@@ -79,6 +79,6 @@
                 android:layout_height="wrap_content"
                 android:text="Install" />
         </LinearLayout>
-    </com.monetization.nativeads.ui.AdmobNativeView>
+    </com.google.android.gms.ads.nativead.NativeAdView>
 
 </LinearLayout>

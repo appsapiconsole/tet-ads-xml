@@ -69,6 +69,9 @@ class MainActivity : ComponentActivity() {
                 true
             )
         }
+        binding.showNativeAd.setOnClickListener {
+            showNativeAd()
+        }
         binding.showAd.setOnClickListener {
             showCounterAd {
                 startActivity(Intent(this@MainActivity, MainActivity::class.java))
@@ -179,7 +182,8 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showBannerAd() {
-        binding.adFrame.sdkBannerAd(activity = this,
+        binding.adFrame.sdkBannerAd(
+            activity = this,
             adKey = "Banner",
             placementKey = true.toConfigString(),
             showNewAdEveryTime = true,

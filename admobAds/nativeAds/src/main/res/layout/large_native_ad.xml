@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.monetization.nativeads.ui.AdmobNativeView
+    <com.google.android.gms.ads.nativead.NativeAdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,7 +109,7 @@
 
                     </LinearLayout>
 
-                    <com.monetization.nativeads.ui.AdmobNativeMediaView
+                    <com.google.android.gms.ads.nativead.MediaView
                         android:id="@+id/ad_media"
                         android:layout_width="match_parent"
                         android:layout_height="125dp"
@@ -147,5 +147,5 @@
             </LinearLayout>
 
         </RelativeLayout>
-    </com.monetization.nativeads.ui.AdmobNativeView>
+    </com.google.android.gms.ads.nativead.NativeAdView>
 </RelativeLayout>

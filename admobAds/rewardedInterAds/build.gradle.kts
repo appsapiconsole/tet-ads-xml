@@ -37,7 +37,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.bundles.ads.related)
+    api(libs.bundles.ads.related)
     implementation(project(":admobAds:core"))
 }
 

@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity)
     implementation(libs.material)
-    implementation(libs.bundles.ads.related)
+    api(libs.bundles.ads.related)
 }
 
 

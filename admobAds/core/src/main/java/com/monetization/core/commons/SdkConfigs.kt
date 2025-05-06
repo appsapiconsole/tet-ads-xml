@@ -1,7 +1,6 @@
 package com.monetization.core.commons
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import com.facebook.shimmer.BuildConfig
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.logAds
@@ -17,6 +16,7 @@ object SdkConfigs {
     private var isTestModeEnabled = BuildConfig.DEBUG
     private var disableAllAds = false
     private var manualBlockList = mutableListOf<ManualBlockModel>()
+
 
     fun isAdManuallyBlockedForLoad(adKey: String, adType: AdType): Boolean {
         val index = manualBlockList.indexOfFirst {

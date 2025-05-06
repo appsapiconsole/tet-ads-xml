@@ -1,3 +1,4 @@
+/*
 package com.monetization.nativeads.ui
 
 import android.content.Context
@@ -6,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.google.android.gms.ads.nativead.MediaView
+import com.monetization.nativeads.ui.media_view.GetMediaView
+import com.monetization.nativeads.ui.media_view.GetMediaViewImpl
 
 class AdmobNativeMediaView @JvmOverloads constructor(
     context: Context,
@@ -15,20 +18,20 @@ class AdmobNativeMediaView @JvmOverloads constructor(
 
     private var mediaView: MediaView? = null
 
+    private var getMediaView: GetMediaView = GetMediaViewImpl()
+
+    fun setGetMediaView(getMediaView: GetMediaView) {
+        this.getMediaView = getMediaView
+    }
+
     init {
         initializeMediaView()
     }
 
     private fun initializeMediaView() {
         if (mediaView == null) {
-            mediaView = MediaView(context).apply {
-                id = generateViewId()
-            }
-            val params = LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT
-            )
-            super.addView(mediaView, 0, params)
+            mediaView = getMediaView.getNativeMediaView(context)
+            super.addView(mediaView, 0)
         }
     }
 
@@ -43,3 +46,4 @@ class AdmobNativeMediaView @JvmOverloads constructor(
         return mediaView
     }
 }
+*/

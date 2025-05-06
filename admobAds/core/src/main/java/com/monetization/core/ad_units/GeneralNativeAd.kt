@@ -12,10 +12,10 @@ interface GeneralNativeAd : AdUnit {
     fun getCtaText(): String?
     fun getAdvertiserName(): String?
     fun destroyAd(activity: Activity)
-    fun populateAd(
+    /*fun populateAd(
         activity: Activity,
         adViewLayout: View?,
         adsWidgetData: AdsWidgetData? = null,
         onPopulated: () -> Unit,
-    )
+    )*/
 }

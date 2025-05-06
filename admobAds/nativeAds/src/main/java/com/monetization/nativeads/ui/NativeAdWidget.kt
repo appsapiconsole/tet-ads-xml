@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.facebook.shimmer.ShimmerFrameLayout
+import com.google.android.gms.ads.nativead.NativeAd
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.commons.NativeConstants.inflateLayoutByLayoutInfo
@@ -26,6 +27,8 @@ import com.monetization.nativeads.AdmobNativeAd
 import com.monetization.nativeads.AdmobNativeAdsController
 import com.monetization.nativeads.AdmobNativeAdsManager
 import com.monetization.nativeads.R
+import com.monetization.nativeads.populate.NativePopulator
+import com.monetization.nativeads.populate.NativePopulatorImpl
 
 class NativeAdWidget @JvmOverloads constructor(
     private val context: Context,
@@ -39,6 +42,12 @@ class NativeAdWidget @JvmOverloads constructor(
 
     private var layoutView: LayoutInfo? = null
     private var isRepeatCheckingAllowed = true
+    private var adPopulator: NativePopulator = NativePopulatorImpl()
+
+    fun setNativePopulator(adPopulator: NativePopulator) {
+        this.adPopulator = adPopulator
+    }
+
 
     fun setRepeatCheckingAllowed(check: Boolean) {
         isRepeatCheckingAllowed = check
@@ -115,22 +124,25 @@ class NativeAdWidget @JvmOverloads constructor(
     fun showNativeAd(view: LayoutInfo, onShown: () -> Unit) {
         adUnit?.let {
             val layout = view.inflateLayoutByLayoutInfo(activity!!)
-            val admobNativeView = layout.findViewById<AdmobNativeView>(R.id.adView)
-            logAds(
-                "populateNativeAd(${activity?.localClassName?.substringAfterLast(".")}) " + ",Ad Ok=${adUnit != null}," + "Layout Ok=${layout != null},Native View Ok=${admobNativeView != null}"
-            )
-            removeAllViews()
-            layout.parent?.let { parent ->
-                (parent as ViewGroup).removeView(layout)
+//            layout.findViewById<>()
+            adPopulator.populateAd(
+                activity = activity!!,
+                nativeAd = (it as? AdmobNativeAd)?.nativeAd,
+                adViewLayout = layout,
+                adsWidgetData = adsWidgetData,
+                addViewInParent = {
+                    addView(it)
+                }
+            ) {
+                refreshLayout()
+                onShown.invoke()
             }
-
-            addView(layout)
-            admobNativeView?.let { view ->
+            /*admobNativeView?.let { view ->
                 (it as AdmobNativeAd).populateAd(activity!!, view, adsWidgetData) {
                     refreshLayout()
                     onShown.invoke()
                 }
-            }
+            }*/
         }
     }
 

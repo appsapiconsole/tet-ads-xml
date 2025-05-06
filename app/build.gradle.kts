@@ -72,14 +72,14 @@ dependencies {
     implementation(libs.koin.core)
     implementation("com.github.appsapiconsole:tet-remote-config:0.0.2")
 
-    implementation(project(":admobAds:core"))
-    implementation(project(":admobAds:adsMain"))
-    implementation(project(":admobAds:appOpen"))
-    implementation(project(":admobAds:bannerAds"))
-    implementation(project(":admobAds:interstitials"))
-    implementation(project(":admobAds:nativeAds"))
-    implementation(project(":admobAds:rewadedAd"))
-    implementation(project(":admobAds:rewardedInterAds"))
+    api(project(":admobAds:core"))
+    api(project(":admobAds:adsMain"))
+    api(project(":admobAds:appOpen"))
+    api(project(":admobAds:bannerAds"))
+    api(project(":admobAds:interstitials"))
+    api(project(":admobAds:nativeAds"))
+    api(project(":admobAds:rewadedAd"))
+    api(project(":admobAds:rewardedInterAds"))
     implementation("io.insert-koin:koin-androidx-compose:3.5.6")
 
 

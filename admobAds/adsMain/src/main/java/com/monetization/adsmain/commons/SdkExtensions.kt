@@ -11,8 +11,8 @@ import com.monetization.core.listeners.UiAdsListener
 import com.monetization.core.ui.AdsWidgetData
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
-
-
+import com.monetization.nativeads.populate.NativePopulator
+import com.monetization.nativeads.populate.NativePopulatorImpl
 
 
 fun AdsUiWidget.sdkNativeAdd(
@@ -28,7 +28,8 @@ fun AdsUiWidget.sdkNativeAdd(
     showFromHistory: Boolean = false,
     defaultEnable: Boolean = true,
     adsWidgetData: AdsWidgetData? = null,
-    listener: UiAdsListener? = null
+    listener: UiAdsListener? = null,
+    populator: NativePopulator = NativePopulatorImpl()
 ) {
     apply {
         attachWithLifecycle(lifecycle = lifecycle, forBanner = false, isJetpackCompose = false)
@@ -48,7 +49,8 @@ fun AdsUiWidget.sdkNativeAdd(
             requestNewOnShow = requestNewOnShow,
             listener = listener,
             showOnlyIfAdAvailable = showOnlyIfAdAvailable,
-            showFromHistory = showFromHistory
+            showFromHistory = showFromHistory,
+            populator = populator
         )
     }
 }

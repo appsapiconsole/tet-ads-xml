@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.facebook.shimmer.ShimmerFrameLayout
-import com.google.android.gms.ads.nativead.NativeAd
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons.logAds
 import com.monetization.core.commons.NativeConstants.inflateLayoutByLayoutInfo
@@ -62,8 +61,10 @@ class NativeAdWidget @JvmOverloads constructor(
         oneTimeUse: Boolean = true,
         requestNewOnShow: Boolean = true,
         showFromHistory: Boolean = false,
-        listener: UiAdsListener? = null
+        listener: UiAdsListener? = null,
+        adPopulator: NativePopulator
     ) {
+        setNativePopulator(adPopulator)
         this.layoutView = if (isValuesFromRemote) {
             if (adsWidgetData?.adLayout != null) {
                 LayoutInfo.LayoutByName(adsWidgetData!!.adLayout!!)

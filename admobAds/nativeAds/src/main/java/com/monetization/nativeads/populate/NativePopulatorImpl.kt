@@ -5,15 +5,14 @@ import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
-import com.monetization.core.commons.AdsCommons
 import com.monetization.core.commons.AdsCommons.logAds
-import com.monetization.core.commons.NativeConstants.makeGone
 import com.monetization.core.commons.Utils
 import com.monetization.core.ui.AdsWidgetData
 import com.monetization.nativeads.R
@@ -28,7 +27,88 @@ class NativePopulatorImpl : NativePopulator {
         addViewInParent: (View) -> Unit,
         onPopulated: () -> Unit
     ) {
+        val admobNativeView: NativeAdView? = adViewLayout?.findViewById(R.id.adView)
+        val mediaView = admobNativeView?.findViewById<MediaView?>(R.id.ad_media)
+        if (admobNativeView == null) {
+            return
+        }
+        if (nativeAd == null) {
+            return
+        }
+        if (mediaView != null) {
+            admobNativeView.mediaView = mediaView
+        }
 
+        adViewLayout.parent?.let { parent ->
+            (parent as ViewGroup).removeView(adViewLayout)
+        }
+        adViewLayout.let { addViewInParent.invoke(it) }
+
+        admobNativeView.headlineView = admobNativeView.findViewById(R.id.ad_headline)
+        admobNativeView.bodyView = admobNativeView.findViewById(R.id.ad_body)
+        admobNativeView.iconView = admobNativeView.findViewById(R.id.ad_app_icon)
+        admobNativeView.callToActionView = admobNativeView.findViewById(R.id.ad_call_to_action)
+        admobNativeView.advertiserView = admobNativeView.findViewById(R.id.ad_advertiser)
+
+        (admobNativeView.headlineView as TextView?)?.text = nativeAd.headline
+        admobNativeView.mediaView?.mediaContent = nativeAd.mediaContent
+        logAds(
+            """
+            NativePopulated
+            headline=${nativeAd.headline}
+            body=${nativeAd.body}
+            Icon=${nativeAd.icon != null}
+            callToAction=${nativeAd.callToAction}
+            advertiser=${nativeAd.advertiser}
+            
+            headlineView=${admobNativeView.headlineView != null}
+            bodyView=${admobNativeView.bodyView != null}
+            iconView=${admobNativeView.iconView != null}
+            callToActionView=${admobNativeView.callToActionView != null}
+            advertiserView=${admobNativeView.advertiserView != null}
+            
+        """.trimIndent(),
+            true
+        )
+        if (nativeAd.icon == null) {
+            admobNativeView.iconView?.visibility = View.GONE
+        } else {
+            admobNativeView.iconView?.visibility = View.VISIBLE
+            (admobNativeView.iconView as ImageView?)?.setImageDrawable(nativeAd.icon?.drawable)
+        }
+        if (nativeAd.body == null) {
+            admobNativeView.bodyView?.visibility = View.INVISIBLE
+        } else {
+            admobNativeView.bodyView?.visibility = View.VISIBLE
+            (admobNativeView.bodyView as TextView?)?.text = nativeAd.body
+        }
+
+        if (nativeAd.callToAction == null) {
+            admobNativeView.callToActionView?.visibility = View.INVISIBLE
+        } else {
+            admobNativeView.callToActionView?.visibility = View.VISIBLE
+            (admobNativeView.callToActionView as? Button?)?.text = nativeAd.callToAction
+        }
+
+        if (nativeAd.advertiser == null) {
+            admobNativeView.advertiserView?.visibility = View.GONE
+        } else {
+            (admobNativeView.advertiserView as? TextView?)?.text = nativeAd.advertiser
+            admobNativeView.advertiserView?.visibility = View.GONE
+        }
+
+        admobNativeView.setNativeAd(nativeAd)
+        onPopulated.invoke()
+    }
+    /*
+    override fun populateAd(
+        activity: Activity,
+        nativeAd: NativeAd?,
+        adViewLayout: View?,
+        adsWidgetData: AdsWidgetData?,
+        addViewInParent: (View) -> Unit,
+        onPopulated: () -> Unit
+    ) {
 
         val admobNativeView: NativeAdView? = adViewLayout?.findViewById(R.id.adView)
         logAds(
@@ -124,7 +204,7 @@ class NativePopulatorImpl : NativePopulator {
                 }
             }
         }
-    }
+    }*/
 
     private fun setAdsWidgetData(
         context: Context,

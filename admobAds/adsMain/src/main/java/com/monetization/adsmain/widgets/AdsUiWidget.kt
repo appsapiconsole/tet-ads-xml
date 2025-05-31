@@ -18,6 +18,8 @@ import com.monetization.core.models.RefreshAdInfo
 import com.monetization.core.ui.AdsWidgetData
 import com.monetization.core.ui.LayoutInfo
 import com.monetization.core.ui.ShimmerInfo
+import com.monetization.nativeads.populate.NativePopulator
+import com.monetization.nativeads.populate.NativePopulatorImpl
 import com.monetization.nativeads.ui.NativeAdWidget
 import video.downloader.adsmain.R
 
@@ -163,7 +165,8 @@ class AdsUiWidget @JvmOverloads constructor(
         requestNewOnShow: Boolean = true,
         showOnlyIfAdAvailable: Boolean = false,
         showFromHistory: Boolean = false,
-        listener: UiAdsListener? = null
+        listener: UiAdsListener? = null,
+        populator: NativePopulator
     ) {
         if (showOnlyIfAdAvailable && adKey.isAdAvailable().not()) {
             logAds("Because No Ad Is Available Against key=$adKey", true)
@@ -186,7 +189,8 @@ class AdsUiWidget @JvmOverloads constructor(
                 oneTimeUse = oneTimeUse,
                 requestNewOnShow = requestNewOnShow,
                 listener = listener,
-                showFromHistory = showFromHistory
+                showFromHistory = showFromHistory,
+                adPopulator = populator
             )
         } catch (e: Exception) {
             logAds("Exception When Calling showNativeAdmob ${e.message}")

@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun showNativeAd() {
-        com.monetization.nativeads.R.layout.large_native_ad
+
         binding.adFrame.sdkNativeAdd(
             adLayout = LayoutInfo.LayoutByName("large_native_ad"),
             adKey = "Native",

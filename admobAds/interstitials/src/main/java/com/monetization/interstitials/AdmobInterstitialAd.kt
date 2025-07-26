@@ -20,6 +20,7 @@ class AdmobInterstitialAd(
         /*if (AdsCommons.isFullScreenAdShowing) {
             return
         }*/
+        interstitialAds.setImmersiveMode(true)
         AdsCommons.isFullScreenAdShowing = true
         val controller: AdsControllerBaseHelper? =
             AdmobInterstitialAdsManager.getAdController(adKey)

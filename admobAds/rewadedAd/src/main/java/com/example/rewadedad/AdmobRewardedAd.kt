@@ -23,6 +23,7 @@ class AdmobRewardedAd(
         /*if (AdsCommons.isFullScreenAdShowing) {
             return
         }*/
+        rewardedAd.setImmersiveMode(true)
         AdsCommons.isFullScreenAdShowing = true
         val controller: AdsControllerBaseHelper? = AdmobRewardedAdsManager.getAdController(adKey)
         rewardedAd.fullScreenContentCallback = object : FullScreenContentCallback() {

@@ -4,11 +4,11 @@ import android.app.Activity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
-import com.monetization.core.controllers.AdsControllerBaseHelper
-import com.monetization.core.managers.FullScreenAdsShowListener
 import com.monetization.core.ad_units.GeneralInterOrAppOpenAd
 import com.monetization.core.ad_units.core.AdType
 import com.monetization.core.commons.AdsCommons
+import com.monetization.core.controllers.AdsControllerBaseHelper
+import com.monetization.core.managers.FullScreenAdsShowListener
 
 class AdmobRewardedInterAd(
     val rewardedInter: RewardedInterstitialAd,
@@ -19,6 +19,7 @@ class AdmobRewardedInterAd(
         /*if (AdsCommons.isFullScreenAdShowing) {
             return
         }*/
+        rewardedInter.setImmersiveMode(true)
         AdsCommons.isFullScreenAdShowing = true
         val controller: AdsControllerBaseHelper? =
             AdmobRewardedInterAdsManager.getAdController(adKey)

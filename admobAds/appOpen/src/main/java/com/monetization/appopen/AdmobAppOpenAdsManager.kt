@@ -11,7 +11,7 @@ import com.monetization.core.managers.AdmobBaseAdsManager
 object AdmobAppOpenAdsManager : AdmobBaseAdsManager<AdmobAppOpenAdsController>(AdType.AppOpen),
     DefaultLifecycleObserver {
 
-    private val TAG = "AdmobAppOpenAdsManagerTag"
+        val TAG = "AdmobAppOpenAdsManagerTag"
 
     init {
         addNewController(AdmobAppOpenAdsController("Test", listOf(TestAds.TestAppOpenId)))

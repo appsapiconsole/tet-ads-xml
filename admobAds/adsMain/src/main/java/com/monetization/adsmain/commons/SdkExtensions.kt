@@ -1,12 +1,8 @@
 package com.monetization.adsmain.commons
 
 import android.app.Activity
-import android.view.View
 import androidx.lifecycle.Lifecycle
 import com.monetization.adsmain.widgets.AdsUiWidget
-import com.monetization.bannerads.BannerAdSize
-import com.monetization.bannerads.BannerAdType
-import com.monetization.core.commons.SdkConfigs
 import com.monetization.core.listeners.UiAdsListener
 import com.monetization.core.ui.AdsWidgetData
 import com.monetization.core.ui.LayoutInfo
@@ -29,7 +25,7 @@ fun AdsUiWidget.sdkNativeAdd(
     defaultEnable: Boolean = true,
     adsWidgetData: AdsWidgetData? = null,
     listener: UiAdsListener? = null,
-    populator: NativePopulator = NativePopulatorImpl()
+    populator: NativePopulator? = NativePopulatorImpl()
 ) {
     apply {
         attachWithLifecycle(lifecycle = lifecycle, forBanner = false, isJetpackCompose = false)
@@ -50,7 +46,7 @@ fun AdsUiWidget.sdkNativeAdd(
             listener = listener,
             showOnlyIfAdAvailable = showOnlyIfAdAvailable,
             showFromHistory = showFromHistory,
-            populator = populator
+            populator = populator ?: NativePopulatorImpl()
         )
     }
 }
@@ -68,7 +64,8 @@ fun AdsUiWidget.sdkNativeAd(
     showFromHistory: Boolean = false,
     defaultEnable: Boolean = true,
     adsWidgetData: AdsWidgetData? = null,
-    listener: UiAdsListener? = null
+    listener: UiAdsListener? = null,
+    populator: NativePopulator? = NativePopulatorImpl()
 ) {
     sdkNativeAdd(
         adLayout = LayoutInfo.LayoutByName(adLayout),
@@ -83,7 +80,8 @@ fun AdsUiWidget.sdkNativeAd(
         showFromHistory = showFromHistory,
         defaultEnable = defaultEnable,
         adsWidgetData = adsWidgetData,
-        listener = listener
+        listener = listener,
+        populator = populator
     )
 }
 

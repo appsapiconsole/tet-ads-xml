@@ -136,7 +136,8 @@ class MainActivity : ComponentActivity() {
                     super.onAdClicked(key)
                 }
             },
-            activity = this
+            activity = this,
+
         )
     }
 

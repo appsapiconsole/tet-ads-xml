@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.graphics.toColorInt
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
@@ -44,14 +45,32 @@ class NativePopulatorImpl : NativePopulator {
         }
         adViewLayout.let { addViewInParent.invoke(it) }
 
-        admobNativeView.headlineView = admobNativeView.findViewById(R.id.ad_headline)
-        admobNativeView.bodyView = admobNativeView.findViewById(R.id.ad_body)
-        admobNativeView.iconView = admobNativeView.findViewById(R.id.ad_app_icon)
-        admobNativeView.callToActionView = admobNativeView.findViewById(R.id.ad_call_to_action)
-        admobNativeView.advertiserView = admobNativeView.findViewById(R.id.ad_advertiser)
+        val headlineView = admobNativeView.findViewById<TextView>(R.id.ad_headline)
+        val bodyView = admobNativeView.findViewById<TextView>(R.id.ad_body)
+        val iconView = admobNativeView.findViewById<ImageView>(R.id.ad_app_icon)
+        val callToActionView = admobNativeView.findViewById<AppCompatButton>(R.id.ad_call_to_action)
+        val advertiserView = admobNativeView.findViewById<TextView>(R.id.ad_advertiser)
+
+
+        admobNativeView.headlineView = headlineView
+        admobNativeView.bodyView = bodyView
+        admobNativeView.iconView = iconView
+        admobNativeView.callToActionView = callToActionView
+        admobNativeView.advertiserView = advertiserView
 
         (admobNativeView.headlineView as TextView?)?.text = nativeAd.headline
         admobNativeView.mediaView?.mediaContent = nativeAd.mediaContent
+
+        setAdsWidgetData(
+            context = activity,
+            adsWidgetData = adsWidgetData,
+            adHeadLine = headlineView,
+            adBody = bodyView,
+            adCtaBtn = callToActionView,
+            mIconView = iconView,
+            attrTextView = advertiserView,
+            mediaView = mediaView
+        )
         logAds(
             """
             NativePopulated
@@ -96,6 +115,7 @@ class NativePopulatorImpl : NativePopulator {
             (admobNativeView.advertiserView as? TextView?)?.text = nativeAd.advertiser
             admobNativeView.advertiserView?.visibility = View.GONE
         }
+
 
         admobNativeView.setNativeAd(nativeAd)
         onPopulated.invoke()
